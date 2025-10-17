@@ -1,0 +1,24 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@hobbistas/data-access": ["web/data-access/src/index.ts"],
+      "@hobbistas/models": ["shared/models/src/index.ts"],
+      "@hobbistas/ui": ["web/ui/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

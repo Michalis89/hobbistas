@@ -1,0 +1,112 @@
+<header class="navbar bg-base-100 border-b border-base-300 sticky top-0 z-50">
+  <div class="navbar-start gap-2">
+    <button
+      class="btn btn-ghost lg:hidden"
+      (click)="toggleMenu()"
+      aria-label="Toggle menu"
+      [attr.aria-expanded]="open()"
+      aria-controls="mobile-menu"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 24 24"
+        class="h-5 w-5"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M3 6h18M3 12h18M3 18h18" />
+      </svg>
+    </button>
+
+    <a class="btn btn-ghost text-xl" [routerLink]="['/']">{{ appName }}</a>
+  </div>
+
+  <nav class="navbar-center hidden lg:flex">
+    <ul class="menu menu-horizontal px-1">
+      @for (s of sections; track s.label) {
+      <!-- dropdown αν έχει children -->
+      @if (s.children?.length) {
+      <li>
+        <div class="dropdown hover:bg-transparent">
+          <button class="btn btn-ghost" tabindex="0">
+            {{ s.label }}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              class="ml-1 h-4 w-4"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M6 9l6 6 6-6" />
+            </svg>
+          </button>
+
+          <ul
+            class="dropdown-content mt-2 top-full w-72 p-3 grid grid-cols-1 gap-1 rounded-xl bg-base-100/90 backdrop-blur-md shadow-2xl ring-1 ring-base-300/40"
+          >
+            @for (c of s.children; track c.path) {
+            <li>
+              <a
+                [routerLink]="[c.path]"
+                routerLinkActive="active"
+                class="rounded-lg px-3 py-2 hover:bg-base-200/70 transition aria-[current=page]:bg-primary/15 aria-[current=page]:text-primary"
+              >
+                {{ c.label }}
+              </a>
+            </li>
+            }
+          </ul>
+        </div>
+      </li>
+      }@else {
+      <li>
+        <a
+          [routerLink]="[s.path!]"
+          routerLinkActive="active"
+          class="capitalize"
+        >
+          {{ s.label }}
+        </a>
+      </li>
+      } }
+    </ul>
+  </nav>
+
+  <div class="navbar-end gap-2">
+    <button class="btn btn-ghost" (click)="toggleTheme()">
+      <span class="hidden sm:inline">Theme</span>
+      <span class="badge badge-outline ml-2">{{ theme() }}</span>
+    </button>
+  </div>
+</header>
+
+@if (open()) {
+<div class="lg:hidden" id="mobile-menu">
+  <ul class="menu bg-base-100 border-b border-base-300 p-2">
+    @for (s of sections; track s.label) { @if (s.children?.length) {
+    <li>
+      <details>
+        <summary>{{ s.label }}</summary>
+        <ul>
+          @for (c of s.children; track c.path) {
+          <li>
+            <a [routerLink]="[c.path]" (click)="toggleMenu()">{{ c.label }}</a>
+          </li>
+          }
+        </ul>
+      </details>
+    </li>
+    } @else {
+    <li>
+      <a [routerLink]="[s.path!]" (click)="toggleMenu()">{{ s.label }}</a>
+    </li>
+    } }
+  </ul>
+</div>
+}

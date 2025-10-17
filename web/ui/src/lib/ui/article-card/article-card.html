@@ -1,0 +1,27 @@
+<article class="card bg-base-100 shadow-lg border border-base-300">
+  @if(article?.coverImageUrl){
+  <figure>
+    <img [src]="article!.coverImageUrl" [alt]="article!.title" />
+  </figure>
+  }
+
+  <div class="card-body">
+    <div class="flex items-center gap-2 text-sm opacity-70">
+      <span class="badge badge-outline capitalize"
+        >{{ article?.category }}</span
+      >
+      @if(article?.publishedAt){
+      <span>• {{ article?.publishedAt | date : 'mediumDate' }}</span>
+      }
+    </div>
+    <h2 class="card-title">{{ article?.title }}</h2>
+    @if(article?.excerpt){
+    <p class="opacity-80">{{ article?.excerpt }}</p>
+    }
+    <div class="card-actions justify-end">
+      <a class="btn btn-primary btn-sm" [routerLink]="['/blog', article?.slug]"
+        >Read</a
+      >
+    </div>
+  </div>
+</article>
