@@ -1,0 +1,30 @@
+<section
+  class="flex flex-col items-center justify-center min-h-[70vh] text-center px-4"
+>
+  <img
+    src="https://cdn-icons-png.flaticon.com/512/5239/5239585.png"
+    alt="Under construction"
+    class="w-40 h-40 mb-6 opacity-90 animate-pulse"
+    loading="lazy"
+    decoding="async"
+  />
+
+  <h1 class="text-4xl font-extrabold mb-3 text-primary">
+    {{ title() }} @if (rest()) { / {{ rest()| titlecase }} }
+  </h1>
+
+  <p class="text-lg text-base-content/70 mb-6 max-w-md">
+    Η σελίδα είναι υπό κατασκευή.<br />
+    Σύντομα θα βρεις εδώ περιεχόμενο για {{ title() | lowercase }}! @if(rest()){
+    <ng-container> (ενότητα: {{ rest() }}) </ng-container>
+    }
+  </p>
+
+  <a
+    routerLink="/"
+    class="btn btn-primary btn-wide shadow-md hover:shadow-lg transition"
+    aria-label="Επιστροφή στην αρχική"
+  >
+    Επιστροφή στην αρχική
+  </a>
+</section>

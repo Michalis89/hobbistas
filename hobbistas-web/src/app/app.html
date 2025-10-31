@@ -1,17 +1,2 @@
 <lib-ui-header appName="Hobbistas"></lib-ui-header>
 <router-outlet></router-outlet>
-<main class="p-6 space-y-6">
-  <h1 class="text-2xl font-bold">Hobbistas</h1>
-  <button class="btn btn-primary" (click)="ping()">Ping API</button>
-  @if(last){
-  <pre class="p-3 rounded bg-base-200">{{ last | json }}</pre>
-  }
-  <section>
-    <h2 class="text-xl font-semibold mb-3">Demo Articles</h2>
-    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-      @for (a of demo; track a.id) {
-      <lib-ui-article-card [article]="a" />
-      }
-    </div>
-  </section>
-</main>

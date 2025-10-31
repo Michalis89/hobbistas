@@ -1,0 +1,236 @@
+<!-- Hero Section -->
+<section
+  class="hero min-h-[70vh] bg-gradient-to-br from-primary to-secondary relative overflow-hidden"
+>
+  <div class="hero-overlay bg-opacity-60"></div>
+  <div class="hero-content text-center text-neutral-content z-10">
+    <div class="max-w-3xl">
+      <h1 class="text-5xl md:text-7xl font-bold mb-4 animate-fade-in">
+        {{ heroTitle }}
+      </h1>
+      <p class="text-xl md:text-2xl mb-3 font-semibold">{{ heroSubtitle }}</p>
+      <p class="text-lg mb-8 opacity-90">{{ heroDescription }}</p>
+      <div class="flex gap-4 justify-center flex-wrap">
+        <button class="btn btn-lg btn-accent">Εξερεύνησε Άρθρα</button>
+        <button class="btn btn-lg btn-outline btn-accent">
+          Μάθε Περισσότερα
+        </button>
+      </div>
+    </div>
+  </div>
+  <!-- Decorative elements -->
+  <div
+    class="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-base-100 to-transparent"
+  ></div>
+</section>
+
+<!-- Stats Section -->
+<section class="py-16 bg-base-100">
+  <div class="container mx-auto px-4">
+    <div
+      class="stats stats-vertical md:stats-horizontal shadow w-full bg-base-200"
+    >
+      @for (stat of stats; track stat.label) {
+      <div class="stat">
+        <div class="stat-figure text-4xl">{{ stat.icon }}</div>
+        <div class="stat-title">{{ stat.label }}</div>
+        <div class="stat-value text-primary">{{ stat.value }}</div>
+      </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Featured Articles Section -->
+<section class="py-16 bg-base-200">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-12">
+      <h2 class="text-4xl font-bold mb-3">Προτεινόμενα Άρθρα</h2>
+      <p class="text-lg opacity-70">Τα καλύτερα άρθρα από την κοινότητά μας</p>
+    </div>
+
+    <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+      @for (article of featuredArticles; track article.id) {
+      <div
+        class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
+      >
+        <figure class="relative h-56 overflow-hidden">
+          <img
+            [src]="article.coverImageUrl"
+            [alt]="article.title"
+            class="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
+          />
+          <div class="badge badge-primary absolute top-4 right-4">
+            {{ article.categoryLabel }}
+          </div>
+        </figure>
+        <div class="card-body">
+          <h3 class="card-title text-xl">{{ article.title }}</h3>
+          <p class="opacity-80 text-sm">{{ article.excerpt }}</p>
+
+          <div class="flex items-center gap-3 mt-4">
+            <div class="avatar">
+              <div class="w-10 rounded-full">
+                <img [src]="article.authorAvatar" [alt]="article.author" />
+              </div>
+            </div>
+            <div class="flex-1">
+              <p class="font-semibold text-sm">{{ article.author }}</p>
+              <p class="text-xs opacity-60">
+                {{ article.publishedAt }} · {{ article.readTime }}
+              </p>
+            </div>
+          </div>
+
+          <div class="card-actions justify-between items-center mt-4">
+            <div class="flex gap-4 text-sm opacity-70">
+              <span>👁️ {{ article.views }}</span>
+              <span>❤️ {{ article.likes }}</span>
+            </div>
+            <button class="btn btn-primary btn-sm">Διάβασε</button>
+          </div>
+
+          <div class="flex gap-2 flex-wrap mt-3">
+            @for (tag of article.tags; track tag) {
+            <span class="badge badge-outline badge-sm">{{ tag }}</span>
+            }
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Categories Section -->
+<section class="py-16 bg-base-100">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-12">
+      <h2 class="text-4xl font-bold mb-3">Εξερεύνησε Κατηγορίες</h2>
+      <p class="text-lg opacity-70">Βρες το χόμπι που σε ενδιαφέρει</p>
+    </div>
+
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      @for (category of categories; track category.id) {
+      <a
+        [routerLink]="category.route"
+        class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 group overflow-hidden"
+      >
+        <figure class="h-48 overflow-hidden relative">
+          <img
+            [src]="category.coverImage"
+            [alt]="category.name"
+            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+          />
+          <div
+            class="absolute inset-0 bg-gradient-to-t {{ category.color }} opacity-70"
+          ></div>
+          <div class="absolute inset-0 flex items-center justify-center">
+            <span class="text-7xl">{{ category.icon }}</span>
+          </div>
+        </figure>
+        <div class="card-body">
+          <h3 class="card-title justify-between">
+            <span>{{ category.name }}</span>
+            <div class="badge badge-secondary">{{ category.articleCount }}</div>
+          </h3>
+          <p class="text-sm opacity-70">{{ category.description }}</p>
+        </div>
+      </a>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Latest Articles Section -->
+<section class="py-16 bg-base-200">
+  <div class="container mx-auto px-4">
+    <div class="flex justify-between items-center mb-12">
+      <div>
+        <h2 class="text-4xl font-bold mb-2">Τελευταία Άρθρα</h2>
+        <p class="text-lg opacity-70">
+          Το πιο πρόσφατο περιεχόμενο από την κοινότητα
+        </p>
+      </div>
+      <button class="btn btn-outline btn-primary">Δες Όλα</button>
+    </div>
+
+    <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      @for (article of latestArticles; track article.id) {
+      <div
+        class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300"
+      >
+        <figure class="h-40 overflow-hidden">
+          <img
+            [src]="article.coverImageUrl"
+            [alt]="article.title"
+            class="w-full h-full object-cover"
+          />
+        </figure>
+        <div class="card-body p-5">
+          <div class="badge badge-sm badge-primary mb-2">
+            {{ article.categoryLabel }}
+          </div>
+          <h3 class="font-bold text-base line-clamp-2">{{ article.title }}</h3>
+          <p class="text-xs opacity-70 line-clamp-2">{{ article.excerpt }}</p>
+
+          <div class="flex items-center gap-2 mt-3">
+            <div class="avatar">
+              <div class="w-6 rounded-full">
+                <img [src]="article.authorAvatar" [alt]="article.author" />
+              </div>
+            </div>
+            <p class="text-xs font-semibold">{{ article.author }}</p>
+          </div>
+
+          <div class="flex justify-between text-xs opacity-60 mt-2">
+            <span>{{ article.readTime }}</span>
+            <span>{{ article.publishedAt }}</span>
+          </div>
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- Trending Tags Section -->
+<section class="py-16 bg-base-100">
+  <div class="container mx-auto px-4">
+    <div class="text-center mb-12">
+      <h2 class="text-3xl font-bold mb-3">Δημοφιλή Tags</h2>
+      <p class="opacity-70">Ανακάλυψε το πιο δημοφιλές περιεχόμενο</p>
+    </div>
+
+    <div class="flex flex-wrap gap-3 justify-center max-w-4xl mx-auto">
+      @for (tag of trendingTags; track tag.name) {
+      <a
+        href="#"
+        class="btn btn-outline btn-sm gap-2 hover:btn-primary transition-all"
+      >
+        {{ tag.name }}
+        <div class="badge badge-sm">{{ tag.count }}</div>
+      </a>
+      }
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="py-20 bg-gradient-to-br from-secondary to-accent">
+  <div class="container mx-auto px-4 text-center text-neutral-content">
+    <h2 class="text-4xl md:text-5xl font-bold mb-4">Έτοιμος να Μοιραστείς;</h2>
+    <p class="text-xl mb-8 opacity-90 max-w-2xl mx-auto">
+      Γίνε μέλος της κοινότητας και μοιράσου τις εμπειρίες σου στα χόμπι που
+      αγαπάς
+    </p>
+    <div class="flex gap-4 justify-center flex-wrap">
+      <button class="btn btn-lg btn-primary">Γίνε Μέλος Τώρα</button>
+      <button
+        class="btn btn-lg btn-outline border-white text-white hover:bg-white hover:text-primary"
+      >
+        Γράψε το Πρώτο σου Άρθρο
+      </button>
+    </div>
+  </div>
+</section>

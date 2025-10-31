@@ -7,20 +7,44 @@ import {
   signal,
   DestroyRef,
   PLATFORM_ID,
+  ElementRef,
+  HostListener,
 } from '@angular/core';
-import { RouterLink, RouterLinkActive } from '@angular/router';
-import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import {
+  NavigationEnd,
+  Router,
+  RouterLink,
+  RouterLinkActive,
+} from '@angular/router';
+import { DOCUMENT, isPlatformBrowser, CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { filter } from 'rxjs';
 
 type Theme = 'core' | 'gaming';
-type Child = { label: string; path: string };
-type Section = { label: string; path?: string; children?: Child[] };
+
+interface Notification {
+  id: string;
+  title: string;
+  message: string;
+  time: string;
+  read: boolean;
+  type: 'info' | 'success' | 'warning';
+}
+
+interface User {
+  name: string;
+  email: string;
+  avatar: string;
+  role: string;
+}
 
 @Component({
   selector: 'lib-ui-header',
   standalone: true,
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, CommonModule, FormsModule],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './header.html',
+  styleUrls: ['./header.scss'],
 })
 export class HeaderComponent {
   @Input() appName = 'Hobbistas';
@@ -29,14 +53,64 @@ export class HeaderComponent {
   private readonly platformId = inject(PLATFORM_ID);
   private readonly doc = inject(DOCUMENT);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly el = inject(ElementRef<HTMLElement>);
+  private readonly router = inject(Router);
 
   open = signal(false);
   theme = signal<Theme>('core');
+  searchOpen = signal(false);
+  searchQuery = signal('');
+  notificationsOpen = signal(false);
+  userMenuOpen = signal(false);
+  browseOpen = signal(false);
 
-  sections: Section[] = [
+  // Mock user data
+  currentUser = signal<User>({
+    name: 'Μιχάλης Καρκάνης',
+    email: 'michalis@hobbistas.gr',
+    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=michalis-karkanis',
+    role: 'Admin',
+  });
+
+  // Mock notifications
+  notifications = signal<Notification[]>([
     {
-      label: 'Gaming',
-      children: [
+      id: '1',
+      title: 'Νέο σχόλιο',
+      message: 'Η Άννα σχολίασε στο άρθρο σου "Baldur\'s Gate 3"',
+      time: 'πριν 5 λεπτά',
+      read: false,
+      type: 'info',
+    },
+    {
+      id: '2',
+      title: 'Νέος follower',
+      message: 'Ο Γιώργος άρχισε να σε ακολουθεί',
+      time: 'πριν 1 ώρα',
+      read: false,
+      type: 'success',
+    },
+    {
+      id: '3',
+      title: 'Άρθρο εγκρίθηκε',
+      message: 'Το άρθρο σου "D&D Tips" δημοσιεύτηκε',
+      time: 'πριν 3 ώρες',
+      read: true,
+      type: 'success',
+    },
+  ]);
+
+  unreadNotifications = signal(
+    this.notifications().filter((n) => !n.read).length,
+  );
+
+  // Organized category groups for mega menu
+  categoryGroups = [
+    {
+      icon: '🎮',
+      title: 'Gaming',
+      categories: [
+        { label: 'Gaming', path: '/gaming' },
         { label: 'Reviews', path: '/gaming/reviews' },
         { label: 'Guides / Tips', path: '/gaming/guides' },
         { label: 'Retrospectives', path: '/gaming/retrospectives' },
@@ -45,8 +119,9 @@ export class HeaderComponent {
       ],
     },
     {
-      label: 'D&D',
-      children: [
+      title: 'Dungeons & Dragons',
+      categories: [
+        { label: 'D&D', path: '/dnd', icon: '🗡️' },
         { label: 'Sessions (logs)', path: '/dnd/sessions' },
         { label: 'Characters', path: '/dnd/characters' },
         { label: 'World / Lore', path: '/dnd/lore' },
@@ -54,8 +129,9 @@ export class HeaderComponent {
       ],
     },
     {
-      label: 'Fantasy',
-      children: [
+      title: 'Fantasy',
+      categories: [
+        { label: 'Fantasy', path: '/fantasy', icon: '🐉' },
         { label: 'Worlds & Lore', path: '/fantasy/worlds' },
         { label: 'Greek Fantasy Scene', path: '/fantasy/greek-scene' },
         {
@@ -66,18 +142,17 @@ export class HeaderComponent {
       ],
     },
     {
-      label: 'Collectibles / TCG',
-      children: [
-        { label: 'One Piece', path: '/tcg/one-piece' },
-        { label: 'Magic: The Gathering', path: '/tcg/mtg' },
-        { label: 'Retro Games', path: '/tcg/retro' },
-        { label: 'Figures / Statues', path: '/tcg/figures' },
+      title: 'Συλλογές & Κάρτες',
+      categories: [
+        { label: 'TCG / Collectibles', path: '/tcg', icon: '🃏' },
+        { label: 'One Piece', path: '/tcg/one-piece', icon: '🏴‍☠️' },
+        { label: 'Magic: The Gathering', path: '/tcg/mtg', icon: '🔮' },
+        { label: 'Retro Games', path: '/tcg/retro', icon: '👾' },
       ],
     },
-
     {
-      label: 'Media',
-      children: [
+      title: 'Ψυχαγωγία',
+      categories: [
         { label: 'Movies', path: '/media/movies' },
         { label: 'TV Series', path: '/media/tv' },
         { label: 'Anime', path: '/media/anime' },
@@ -86,35 +161,37 @@ export class HeaderComponent {
       ],
     },
     {
-      label: 'Books',
-      children: [
+      title: 'Βιβλία',
+      categories: [
+        { label: 'Βιβλία', path: '/books', icon: '📚' },
         { label: 'Reviews', path: '/books/reviews' },
         { label: 'Authors', path: '/books/authors' },
         { label: 'Quotes / Highlights', path: '/books/highlights' },
         { label: 'Collections', path: '/books/collections' },
       ],
     },
-
     {
-      label: 'Coding',
-      children: [
+      title: 'Coding',
+      categories: [
+        { label: 'Coding', path: '/code', icon: '💻' },
         { label: 'Articles', path: '/code/articles' },
         { label: 'Tutorials / Guides', path: '/code/guides' },
         { label: 'Projects / Case Studies', path: '/code/projects' },
-        { label: 'Angular • NestJS', path: '/code/angular-nest' },
       ],
     },
     {
-      label: 'Vape',
-      children: [
+      title: 'Vape',
+      categories: [
+        { label: 'Vape', path: '/vape', icon: '💨' },
         { label: 'Reviews', path: '/vape/reviews' },
         { label: 'Guides', path: '/vape/guides' },
         { label: 'Thoughts', path: '/vape/thoughts' },
       ],
     },
     {
-      label: 'Pets',
-      children: [
+      title: 'Κατοικίδια',
+      categories: [
+        { label: 'Κατοικίδια', path: '/pets', icon: '🐾' },
         { label: 'Daily Life', path: '/pets/daily' },
         { label: 'Health & Nutrition', path: '/pets/health' },
         { label: 'Training / Behavior', path: '/pets/training' },
@@ -144,9 +221,14 @@ export class HeaderComponent {
       handler(mq);
       mq.addEventListener('change', handler as EventListener);
       this.destroyRef.onDestroy(() =>
-        mq.removeEventListener('change', handler as EventListener)
+        mq.removeEventListener('change', handler as EventListener),
       );
     }
+    this.router.events
+      .pipe(filter((e) => e instanceof NavigationEnd))
+      .subscribe(() => {
+        this.closeBrowse();
+      });
   }
 
   toggleTheme() {
@@ -155,5 +237,97 @@ export class HeaderComponent {
 
   toggleMenu() {
     this.open.update((v) => !v);
+  }
+
+  toggleSearch() {
+    this.searchOpen.update((v) => !v);
+    if (this.searchOpen()) {
+      // Focus search input after opening
+      setTimeout(() => {
+        if (isPlatformBrowser(this.platformId)) {
+          const searchInput = this.doc.querySelector(
+            '#search-input',
+          ) as HTMLInputElement;
+          searchInput?.focus();
+        }
+      }, 100);
+    } else {
+      this.searchQuery.set('');
+    }
+  }
+
+  toggleNotifications() {
+    this.notificationsOpen.update((v) => !v);
+    this.userMenuOpen.set(false);
+  }
+
+  toggleUserMenu() {
+    this.userMenuOpen.update((v) => !v);
+    this.notificationsOpen.set(false);
+  }
+
+  markNotificationAsRead(id: string) {
+    this.notifications.update((notifications) =>
+      notifications.map((n) => (n.id === id ? { ...n, read: true } : n)),
+    );
+    this.unreadNotifications.set(
+      this.notifications().filter((n) => !n.read).length,
+    );
+  }
+
+  markAllNotificationsAsRead() {
+    this.notifications.update((notifications) =>
+      notifications.map((n) => ({ ...n, read: true })),
+    );
+    this.unreadNotifications.set(0);
+  }
+
+  onSearch() {
+    if (this.searchQuery().trim()) {
+      console.log('Searching for:', this.searchQuery());
+      // Implement search functionality here
+    }
+  }
+
+  logout() {
+    console.log('Logging out...');
+    // Implement logout functionality here
+  }
+
+  // ----- Mega menu (Browse) -----
+  toggleBrowse() {
+    const next = !this.browseOpen();
+    this.browseOpen.set(next);
+
+    // Κλείνουμε => καθάρισε το focus για να μην κρατάει open λόγω :focus-within
+    if (!next) {
+      const ae = this.doc.activeElement as HTMLElement | null;
+      ae?.blur();
+    }
+  }
+
+  closeBrowse() {
+    if (this.browseOpen()) this.browseOpen.set(false);
+  }
+  onNavClick(event: MouseEvent) {
+    // Προσοχή: currentTarget μπορεί να είναι null. Cast ασφαλές με check:
+    const target = event.currentTarget as HTMLElement | null;
+    target?.blur();
+    this.closeBrowse();
+  }
+
+  // Κλείσιμο με click εκτός header
+  @HostListener('document:click', ['$event'])
+  onDocClick(ev: MouseEvent) {
+    if (!this.el.nativeElement.contains(ev.target as Node)) {
+      this.closeBrowse();
+      (this.doc.activeElement as HTMLElement | null)?.blur();
+    }
+  }
+
+  // Κλείσιμο με Escape
+  @HostListener('document:keydown.escape')
+  onEsc() {
+    this.closeBrowse();
   }
 }

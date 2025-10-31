@@ -1,0 +1,373 @@
+/* ========================================
+   MODERN HEADER STYLES
+   ======================================== */
+
+/* Header Main */
+.header-main {
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 1px 3px 0 rgb(0 0 0 / 0.05);
+
+  &.scrolled {
+    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    background: hsl(var(--b1));
+  }
+}
+
+/* Logo */
+.navbar-start {
+  a {
+    text-decoration: none;
+
+    .w-12 {
+      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    &:hover .w-12 {
+      transform: scale(1.05) rotate(-3deg);
+    }
+  }
+}
+
+/* Navigation Buttons */
+nav {
+  .btn {
+    position: relative;
+    transition: all 0.2s ease;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: -8px;
+      left: 50%;
+      transform: translateX(-50%) scaleX(0);
+      width: 60%;
+      height: 3px;
+      background: hsl(var(--p));
+      border-radius: 999px;
+      transition: transform 0.3s ease;
+    }
+
+    &:hover::after {
+      transform: translateX(-50%) scaleX(1);
+    }
+
+    &.router-link-active {
+      color: hsl(var(--p));
+
+      &::after {
+        transform: translateX(-50%) scaleX(1);
+      }
+    }
+  }
+}
+
+/* Dropdown & Mega Menu */
+.dropdown {
+  /* Πάντα block για να μπορούν να παίξουν οι transitions */
+  .dropdown-content {
+    display: block; /* <— ακυρώνει το display:none της DaisyUI */
+    will-change: transform, opacity, clip-path;
+  }
+
+  /* Κλειστό state όταν ΔΕΝ υπάρχει dropdown-open */
+  &:not(.dropdown-open) .mega-panel {
+    opacity: 0;
+    transform-origin: top center;
+    transform: perspective(700px) translateY(-8px) scale(0.98) rotateX(-6deg);
+    clip-path: inset(0 0 92% 0 round 16px);
+    pointer-events: none;
+  }
+
+  /* Ανοιχτό state όταν ΥΠΑΡΧΕΙ dropdown-open */
+  &.dropdown-open .mega-panel {
+    opacity: 1;
+    transform: perspective(700px) translateY(0) scale(1) rotateX(0);
+    clip-path: inset(0 0 0 0 round 16px);
+    pointer-events: auto;
+  }
+}
+
+@keyframes dropdown-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Search Bar */
+.navbar-end {
+  input[type='text'] {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:focus {
+      outline: 2px solid hsl(var(--p));
+      outline-offset: 2px;
+      box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    }
+
+    &::placeholder {
+      transition: opacity 0.2s ease;
+    }
+
+    &:focus::placeholder {
+      opacity: 0.5;
+    }
+  }
+}
+
+/* Avatar & User Menu */
+.avatar {
+  position: relative;
+
+  img {
+    transition: transform 0.2s ease;
+  }
+
+  &.online::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 10px;
+    height: 10px;
+    background: hsl(var(--su));
+    border: 2px solid hsl(var(--b1));
+    border-radius: 50%;
+    z-index: 1;
+  }
+}
+
+.dropdown-end {
+  .btn:hover .avatar img {
+    transform: scale(1.08);
+  }
+}
+
+/* Notifications */
+.indicator-item.badge {
+  animation: pulse-badge 2s ease-in-out infinite;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+@keyframes pulse-badge {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
+/* Write Button */
+.btn-primary {
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.2);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+/* Mobile Menu */
+#mobile-menu {
+  animation: slide-down 0.25s ease-out;
+
+  .btn-outline {
+    font-weight: 600;
+    font-size: 13px;
+  }
+
+  .collapse {
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: hsl(var(--b3));
+    }
+
+    .collapse-title {
+      font-weight: 600;
+      padding: 1rem;
+    }
+
+    .menu {
+      li a {
+        transition: all 0.15s ease;
+        padding: 0.75rem 1rem;
+
+        &:hover {
+          background: hsl(var(--p) / 0.1);
+          color: hsl(var(--p));
+          transform: translateX(4px);
+        }
+      }
+    }
+  }
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ========================================
+   BUTTON & ICON EFFECTS
+   ======================================== */
+
+.btn-circle,
+.btn-square {
+  transition: all 0.2s ease;
+
+  svg {
+    transition: transform 0.2s ease;
+  }
+
+  &:hover {
+    background: hsl(var(--p) / 0.1);
+    color: hsl(var(--p));
+
+    svg {
+      transform: scale(1.1);
+    }
+  }
+
+  &:active svg {
+    transform: scale(0.95);
+  }
+}
+
+/* ========================================
+   THEME SPECIFIC STYLES
+   ======================================== */
+
+[data-theme='gaming'] {
+  .header-main {
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(
+        circle at 80% 0%,
+        hsl(var(--p) / 0.08) 0%,
+        transparent 50%
+      );
+      pointer-events: none;
+      z-index: -1;
+    }
+  }
+
+  .dropdown-content {
+    background: hsl(var(--b1) / 0.98);
+    backdrop-filter: blur(20px);
+    border-color: hsl(var(--bc) / 0.2);
+  }
+
+  nav .btn::after {
+    height: 2px;
+    box-shadow: 0 0 8px hsl(var(--p));
+  }
+}
+
+/* ========================================
+   RESPONSIVE DESIGN
+   ======================================== */
+
+@media (max-width: 1024px) {
+  .navbar {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .navbar-start {
+    a h1 {
+      font-size: 1.5rem;
+    }
+  }
+}
+
+/* ========================================
+   ACCESSIBILITY
+   ======================================== */
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible {
+  outline: 2px solid hsl(var(--p));
+  outline-offset: 2px;
+  border-radius: 0.375rem;
+}
+
+/* ========================================
+   UTILITY CLASSES
+   ======================================== */
+
+.transition-all {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+/* Base state: κρυφό, αλλά με layout-safe transitions (όχι display:none) */
+.mega-panel {
+  /* Αρχική κατάσταση (κλειστό) */
+  opacity: 0;
+  transform-origin: top center;
+  transform: perspective(700px) translateY(-8px) scale(0.98) rotateX(-6deg);
+  clip-path: inset(0 0 92% 0 round 16px);
+  pointer-events: none;
+
+  /* Ομαλές μεταβάσεις */
+ transition:
+    opacity .18s ease,
+    transform .22s cubic-bezier(.2,.7,.2,1),
+    clip-path .28s cubic-bezier(.2,.7,.2,1);
+}
+
+/* Ανοιχτό */
+.mega-panel.open {
+  opacity: 1;
+  transform: perspective(700px) translateY(0) scale(1) rotateX(0);
+  clip-path: inset(0 0 0 0 round 16px);
+  pointer-events: auto;
+}
+
+/* Προαιρετικό micro-polish για children (λίγο lag για depth feeling) */
+.mega-panel.open > * {
+  animation: megaContentIn .24s cubic-bezier(.2,.7,.2,1) both;
+}
+@keyframes megaContentIn {
+  from { transform: translateY(4px); opacity: .0; }
+  to   { transform: translateY(0);   opacity: 1;  }
+}

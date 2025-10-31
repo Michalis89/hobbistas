@@ -1,0 +1,30 @@
+<a
+  [routerLink]="category?.path"
+  class="card bg-gradient-to-br shadow-lg border border-base-300 hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer"
+  [ngClass]="'bg-gradient-to-br ' + (category?.color || 'from-base-200 to-base-300')"
+>
+  <div class="card-body">
+    <!-- Icon & Title -->
+    <div class="flex items-center gap-3 mb-2">
+      @if(category?.icon) {
+      <span class="text-4xl">{{ category?.icon }}</span>
+      }
+      <h2 class="card-title text-white text-2xl">{{ category?.label }}</h2>
+    </div>
+
+    <!-- Description -->
+    @if(category?.description) {
+    <p class="text-white/90 text-sm">{{ category?.description }}</p>
+    }
+
+    <!-- Article Count -->
+    @if(category?.articleCount !== undefined) {
+    <div class="flex items-center justify-between mt-4">
+      <span class="badge badge-lg bg-white/20 text-white border-0">
+        {{ category?.articleCount }} άρθρα
+      </span>
+      <span class="text-white/80 text-sm">Εξερεύνησε →</span>
+    </div>
+    }
+  </div>
+</a>

@@ -1,0 +1,60 @@
+<div class="bg-base-100 p-4 rounded-lg border border-base-300">
+  <!-- Author Info -->
+  <div class="flex items-start gap-3">
+    @if(comment?.author?.avatarUrl) {
+    <a [routerLink]="['/profile', comment?.author?.id]">
+      <img
+        [src]="comment?.author?.avatarUrl"
+        [alt]="comment?.author?.displayName"
+        class="w-10 h-10 rounded-full"
+      />
+    </a>
+    }
+
+    <div class="flex-1">
+      <!-- Header -->
+      <div class="flex items-center gap-2 mb-2">
+        <a
+          [routerLink]="['/profile', comment?.author?.id]"
+          class="font-bold hover:text-primary"
+        >
+          {{ comment?.author?.displayName }}
+        </a>
+        @if(comment?.createdAt) {
+        <span class="text-xs opacity-60">
+          {{ comment?.createdAt | date : 'short' }}
+        </span>
+        } @if(comment?.updatedAt) {
+        <span class="text-xs opacity-40">(επεξεργασμένο)</span>
+        }
+      </div>
+
+      <!-- Content -->
+      @if(comment?.content) {
+      <p class="text-sm whitespace-pre-wrap">{{ comment?.content }}</p>
+      }
+
+      <!-- Actions -->
+      <div class="flex items-center gap-4 mt-3">
+        <button
+          (click)="onLike()"
+          class="btn btn-ghost btn-xs gap-1 hover:text-error"
+        >
+          ❤️ {{ comment?.likes || 0 }}
+        </button>
+        <button (click)="onReply()" class="btn btn-ghost btn-xs gap-1">
+          💬 Απάντηση
+        </button>
+      </div>
+
+      <!-- Replies -->
+      @if(showReplies && (comment?.replies ?? []).length > 0) {
+      <div class="mt-4 space-y-3 ml-4 border-l-2 border-base-300 pl-4">
+        @for(reply of comment?.replies; track reply.id) {
+        <lib-ui-comment-card [comment]="reply" [showReplies]="false" />
+        }
+      </div>
+      }
+    </div>
+  </div>
+</div>

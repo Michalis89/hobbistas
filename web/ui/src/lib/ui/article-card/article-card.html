@@ -1,27 +1,86 @@
-<article class="card bg-base-100 shadow-lg border border-base-300">
+<article
+  class="card bg-base-100 shadow-lg border border-base-300 hover:shadow-xl transition-shadow duration-300"
+>
   @if(article?.coverImageUrl){
-  <figure>
-    <img [src]="article!.coverImageUrl" [alt]="article!.title" />
+  <figure class="relative">
+    <img
+      [src]="article!.coverImageUrl"
+      [alt]="article!.title"
+      class="w-full h-48 object-cover"
+    />
+    @if(article?.category) {
+    <span class="badge badge-primary absolute top-3 left-3 capitalize">
+      {{ article?.category }}
+    </span>
+    }
   </figure>
   }
 
   <div class="card-body">
-    <div class="flex items-center gap-2 text-sm opacity-70">
-      <span class="badge badge-outline capitalize"
-        >{{ article?.category }}</span
-      >
-      @if(article?.publishedAt){
-      <span>• {{ article?.publishedAt | date : 'mediumDate' }}</span>
+    <!-- Author & Date -->
+    <div class="flex items-center gap-3 mb-2">
+      @if(article?.author?.avatarUrl) {
+      <img
+        [src]="article!.author!.avatarUrl"
+        [alt]="article!.author!.displayName"
+        class="w-8 h-8 rounded-full"
+      />
+      }
+      <div class="flex flex-col">
+        @if(article?.author?.displayName) {
+        <span class="text-sm font-medium"
+          >{{ article?.author?.displayName }}</span
+        >
+        } @if(article?.publishedAt) {
+        <span class="text-xs opacity-60"
+          >{{ article?.publishedAt | date : 'mediumDate' }}</span
+        >
+        }
+      </div>
+    </div>
+
+    <!-- Title & Excerpt -->
+    <h2 class="card-title text-lg line-clamp-2">{{ article?.title }}</h2>
+    @if(article?.excerpt){
+    <p class="opacity-80 text-sm line-clamp-3">{{ article?.excerpt }}</p>
+    }
+
+    <!-- Tags -->
+    @if((article?.tags ?? []).length > 0) {
+    <div class="flex flex-wrap gap-2 mt-2">
+      @for(tag of article!.tags.slice(0, 3); track tag) {
+      <span class="badge badge-sm badge-ghost">{{ tag }}</span>
       }
     </div>
-    <h2 class="card-title">{{ article?.title }}</h2>
-    @if(article?.excerpt){
-    <p class="opacity-80">{{ article?.excerpt }}</p>
     }
-    <div class="card-actions justify-end">
-      <a class="btn btn-primary btn-sm" [routerLink]="['/blog', article?.slug]"
-        >Read</a
+
+    <!-- Stats & Actions -->
+    <div class="card-actions justify-between items-center mt-4">
+      <div class="flex gap-4 text-sm opacity-70">
+        @if(article?.stats?.views) {
+        <span class="flex items-center gap-1">
+          👁️ {{ article!.stats!.views }}
+        </span>
+        } @if(article?.stats?.likes) {
+        <span class="flex items-center gap-1">
+          ❤️ {{ article!.stats!.likes }}
+        </span>
+        } @if(article?.stats?.comments) {
+        <span class="flex items-center gap-1">
+          💬 {{ article!.stats!.comments }}
+        </span>
+        } @if(article?.stats?.readTime) {
+        <span class="flex items-center gap-1">
+          📖 {{ article!.stats!.readTime }} λεπτά
+        </span>
+        }
+      </div>
+      <a
+        class="btn btn-primary btn-sm"
+        [routerLink]="['/article', article?.slug]"
       >
+        Διάβασε
+      </a>
     </div>
   </div>
 </article>

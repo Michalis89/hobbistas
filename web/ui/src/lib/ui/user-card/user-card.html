@@ -1,0 +1,84 @@
+<div
+  class="card bg-base-100 shadow-lg border border-base-300 hover:shadow-xl transition-shadow duration-300"
+  [ngClass]="{'card-compact': compact}"
+>
+  <div class="card-body">
+    <!-- User Info -->
+    <div class="flex items-center gap-4">
+      @if(user?.avatarUrl) {
+      <a [routerLink]="['/profile', user?.id]">
+        <img
+          [src]="user?.avatarUrl"
+          [alt]="user?.displayName"
+          [ngClass]="compact ? 'w-12 h-12' : 'w-16 h-16'"
+          class="rounded-full ring-2 ring-primary ring-offset-2 ring-offset-base-100"
+        />
+      </a>
+      }
+
+      <div class="flex-1">
+        <a [routerLink]="['/profile', user?.id]" class="hover:text-primary">
+          <h3 [ngClass]="compact ? 'text-base' : 'text-lg'" class="font-bold">
+            {{ user?.displayName }}
+          </h3>
+        </a>
+
+        @if((user?.roles ?? []).length > 0) {
+        <div class="flex gap-1 mt-1">
+          @for(role of user?.roles; track role) {
+          <span
+            class="badge badge-xs"
+            [ngClass]="{
+                  'badge-error': role === 'admin',
+                  'badge-warning': role === 'editor',
+                  'badge-info': role === 'author',
+                  'badge-ghost': role === 'member'
+                }"
+          >
+            {{ role }}
+          </span>
+          }
+        </div>
+        }
+      </div>
+    </div>
+
+    <!-- Bio -->
+    @if(!compact && user?.bio) {
+    <p class="text-sm opacity-80 mt-2">{{ user?.bio }}</p>
+    }
+
+    <!-- Stats -->
+    @if(showStats && user?.stats) {
+    <div class="grid grid-cols-2 gap-2 mt-4">
+      <div class="stat stat-compact bg-base-200 rounded-lg">
+        <div class="stat-title text-xs">Άρθρα</div>
+        <div class="stat-value text-sm">{{ user?.stats?.articlesCount }}</div>
+      </div>
+      <div class="stat stat-compact bg-base-200 rounded-lg">
+        <div class="stat-title text-xs">Followers</div>
+        <div class="stat-value text-sm">{{ user?.stats?.followersCount }}</div>
+      </div>
+      @if(!compact) {
+      <div class="stat stat-compact bg-base-200 rounded-lg">
+        <div class="stat-title text-xs">Likes</div>
+        <div class="stat-value text-sm">{{ user?.stats?.likesReceived }}</div>
+      </div>
+      <div class="stat stat-compact bg-base-200 rounded-lg">
+        <div class="stat-title text-xs">Comments</div>
+        <div class="stat-value text-sm">{{ user?.stats?.commentsCount }}</div>
+      </div>
+      }
+    </div>
+    }
+
+    <!-- Actions -->
+    @if(!compact) {
+    <div class="card-actions justify-end mt-4">
+      <a [routerLink]="['/profile', user?.id]" class="btn btn-primary btn-sm">
+        Προφίλ
+      </a>
+    </div>
+    }
+  </div>
+</div>
