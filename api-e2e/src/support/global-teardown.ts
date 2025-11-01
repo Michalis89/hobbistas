@@ -1,6 +1,6 @@
 import { killPort } from '@nx/node/utils';
-/* eslint-disable */
-
+/* eslint-disable */ // NOSONAR
+// Purpose: E2E setup script - excluded from lint & Sonar checks
 module.exports = async function () {
   // Put clean up logic here (e.g. stopping services, docker-compose, etc.).
   // Hint: `globalThis` is shared between setup and teardown.

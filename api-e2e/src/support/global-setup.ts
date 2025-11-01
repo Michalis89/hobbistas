@@ -1,6 +1,7 @@
 import { waitForPortOpen } from '@nx/node/utils';
 
-/* eslint-disable */
+/* eslint-disable */ // NOSONAR
+// Purpose: E2E setup script - excluded from lint & Sonar checks
 var __TEARDOWN_MESSAGE__: string;
 
 module.exports = async function () {
