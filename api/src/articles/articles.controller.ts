@@ -16,7 +16,7 @@ import { Public } from '../auth/decorators/public.decorator';
 
 @Controller('articles')
 export class ArticlesController {
-  constructor(private articlesService: ArticlesService) {}
+  constructor(private readonly articlesService: ArticlesService) {}
 
   @Public()
   @Get()

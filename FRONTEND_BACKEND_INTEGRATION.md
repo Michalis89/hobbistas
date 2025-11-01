@@ -75,7 +75,7 @@ export class HomeComponent implements OnInit {
   articles = signal<Article[]>([]);
   loading = signal(true);
 
-  constructor(private apiService: ApiService) {}
+  constructor(private readonly apiService: ApiService) {}
 
   ngOnInit() {
     // Φόρτωσε articles από backend

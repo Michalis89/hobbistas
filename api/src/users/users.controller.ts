@@ -14,7 +14,7 @@ import { Public } from '../auth/decorators/public.decorator';
 
 @Controller('users')
 export class UsersController {
-  constructor(private usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) {}
 
   @Public()
   @Get()

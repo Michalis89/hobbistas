@@ -14,7 +14,7 @@ import { SupabaseService } from '../supabase/supabase.service';
 export class UsersService {
   private readonly logger = new Logger(UsersService.name);
 
-  constructor(private supabaseService: SupabaseService) {}
+  constructor(private readonly supabaseService: SupabaseService) {}
 
   /**
    * Get όλους τους users με pagination

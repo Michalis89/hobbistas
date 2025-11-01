@@ -13,7 +13,7 @@ import { GetUser } from '../auth/decorators/get-user.decorator';
 @Controller('interactions')
 @UseGuards(JwtAuthGuard)
 export class InteractionsController {
-  constructor(private interactionsService: InteractionsService) {}
+  constructor(private readonly interactionsService: InteractionsService) {}
 
   @Post('articles/:id/like')
   likeArticle(@Param('id') articleId: string, @GetUser('id') userId: string) {

@@ -5,7 +5,7 @@ import { SupabaseService } from '../supabase/supabase.service';
 export class InteractionsService {
   private readonly logger = new Logger(InteractionsService.name);
 
-  constructor(private supabaseService: SupabaseService) {}
+  constructor(private readonly supabaseService: SupabaseService) {}
 
   // ===== LIKES =====
   async likeArticle(userId: string, articleId: string) {

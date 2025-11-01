@@ -4,7 +4,7 @@ import { Public } from '../auth/decorators/public.decorator';
 
 @Controller('categories')
 export class CategoriesController {
-  constructor(private supabaseService: SupabaseService) {}
+  constructor(private readonly supabaseService: SupabaseService) {}
 
   @Public()
   @Get()
