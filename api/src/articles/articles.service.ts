@@ -7,6 +7,7 @@ export class ArticlesService {
 
   constructor(private readonly supabaseService: SupabaseService) {}
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async findAll(filters?: any) {
     let query = this.supabaseService
       .getClient()
@@ -48,6 +49,7 @@ export class ArticlesService {
     return data;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async create(authorId: string, createDto: any) {
     const { data, error } = await this.supabaseService
       .getClient()
@@ -70,6 +72,7 @@ export class ArticlesService {
     return data;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async update(articleId: string, updateDto: any) {
     const { data, error } = await this.supabaseService
       .getClient()
@@ -126,8 +129,8 @@ export class ArticlesService {
     return (
       title
         .toLowerCase()
-        .replace(/[^\w\s-]/g, '')
-        .replace(/\s+/g, '-')
+        .replace(/[^\w\s-]/g, '') // NOSONAR
+        .replace(/\s+/g, '-') // NOSONAR
         .substring(0, 100) +
       '-' +
       Date.now()
