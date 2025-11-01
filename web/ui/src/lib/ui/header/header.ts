@@ -73,11 +73,11 @@ export class HeaderComponent {
 
   // Check if user has write privileges (admin, author, or editor)
   canWriteArticles = computed(() => {
-    const user = this.currentUser();
-    if (!user || !user.roles) return false;
+    const roles = this.currentUser()?.roles;
+    if (!roles) return false;
 
-    const privilegedRoles = ['admin', 'author', 'editor'];
-    return user.roles.some((role: string) => privilegedRoles.includes(role));
+    const privilegedRoles = new Set(['admin', 'author', 'editor']);
+    return roles.some((role) => privilegedRoles.has(role));
   });
 
   // Mock notifications

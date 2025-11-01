@@ -189,7 +189,7 @@ export class AuthComponent {
   getErrorMessage(form: FormGroup, field: string): string {
     const control = form.get(field);
 
-    if (!control || !control.touched || !control.errors) {
+    if (!control?.touched || !control?.errors) {
       return '';
     }
 

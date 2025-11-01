@@ -94,7 +94,7 @@ import { AuthService } from '@hobbistas/data-access';
   `,
 })
 export class MyArticlesComponent {
-  private authService = inject(AuthService);
+  private readonly authService = inject(AuthService);
 
   // Get current user
   currentUser = this.authService.currentUser;

@@ -257,7 +257,7 @@ import { UpdateProfileData } from '@hobbistas/models';
   `,
 })
 export class SettingsComponent implements OnInit {
-  private authService = inject(AuthService);
+  private readonly authService = inject(AuthService);
 
   // Get current user
   currentUser = this.authService.currentUser;
@@ -292,30 +292,27 @@ export class SettingsComponent implements OnInit {
 
   onAvatarSelected(event: Event) {
     const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      const file = input.files[0];
+    const file = input.files?.[0];
+    if (!file) return;
 
-      // Validate file type
-      if (!file.type.startsWith('image/')) {
-        alert('Παρακαλώ επίλεξε μια εικόna');
-        return;
-      }
-
-      // Validate file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        alert('Η εικόνα πρέπει να είναι μικρότερη από 5MB');
-        return;
-      }
-
-      this.selectedAvatarFile = file;
-
-      // Create preview
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.avatarPreview.set(e.target?.result as string);
-      };
-      reader.readAsDataURL(file);
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      alert('Παρακαλώ επίλεξε μια εικόνα');
+      return;
     }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      alert('Η εικόνα πρέπει να είναι μικρότερη από 5MB');
+      return;
+    }
+
+    this.selectedAvatarFile = file;
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = (e) => this.avatarPreview.set(e.target?.result as string);
+    reader.readAsDataURL(file);
   }
 
   saveSettings() {

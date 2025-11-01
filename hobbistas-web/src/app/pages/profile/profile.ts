@@ -112,8 +112,8 @@ import { AuthService } from '@hobbistas/data-access';
   `,
 })
 export class ProfileComponent implements OnInit {
-  private authService = inject(AuthService);
-  private route = inject(ActivatedRoute);
+  private readonly authService = inject(AuthService);
+  private readonly route = inject(ActivatedRoute);
 
   // Get current user from AuthService
   currentUser = this.authService.currentUser;
