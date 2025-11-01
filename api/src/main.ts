@@ -32,4 +32,4 @@ async function bootstrap() {
   Logger.log(`✅ CORS enabled for frontend origins`);
 }
 
-bootstrap();
+bootstrap(); // NOSONAR

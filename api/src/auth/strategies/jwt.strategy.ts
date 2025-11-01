@@ -13,8 +13,8 @@ import { SupabaseService } from '../../supabase/supabase.service';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
-    private configService: ConfigService,
-    private supabaseService: SupabaseService,
+    private readonly configService: ConfigService,
+    private readonly supabaseService: SupabaseService,
   ) {
     super({
       // Extract JWT από το Authorization header ως Bearer token
@@ -37,6 +37,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
    * @param payload - Decoded JWT payload
    * @returns User object που θα προστεθεί στο request.user
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   async validate(payload: any) {
     // Το payload περιέχει { sub: userId, email: 'user@example.com', ... }
     const userId = payload.sub;
