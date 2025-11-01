@@ -1,6 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink } from '@angular/router';
+import { RouterLink, ActivatedRoute } from '@angular/router';
+import { AuthService } from '@hobbistas/data-access';
 
 @Component({
   selector: 'app-profile',
@@ -33,8 +34,8 @@ import { RouterLink } from '@angular/router';
 
               <!-- Info -->
               <div class="flex-1">
-                <h1 class="text-4xl font-bold">{{ user().name }}</h1>
-                <p class="text-lg opacity-70">{{ user().email }}</p>
+                <h1 class="text-4xl font-bold">{{ currentUser()?.displayName || 'User' }}</h1>
+                <p class="text-lg opacity-70">{{ currentUser()?.email }}</p>
                 <p class="mt-2">{{ user().bio }}</p>
 
                 <!-- Stats -->
@@ -45,12 +46,14 @@ import { RouterLink } from '@angular/router';
                       {{ user().stats.articles }}
                     </div>
                   </div>
+                  <!-- Following stats hidden for now
                   <div class="stat">
                     <div class="stat-title">Followers</div>
                     <div class="stat-value text-secondary">
                       {{ user().stats.followers }}
                     </div>
                   </div>
+                  -->
                   <div class="stat">
                     <div class="stat-title">Likes</div>
                     <div class="stat-value text-accent">
@@ -61,10 +64,15 @@ import { RouterLink } from '@angular/router';
 
                 <!-- Actions -->
                 <div class="flex gap-2 mt-6">
+                  <!-- Follow/Message buttons hidden until implemented
                   <button class="btn btn-primary">Ακολούθησε</button>
                   <button class="btn btn-outline">Μήνυμα</button>
-                  <a routerLink="/settings" class="btn btn-ghost"
+                  -->
+                  <a routerLink="/settings" class="btn btn-primary"
                     >⚙️ Ρυθμίσεις</a
+                  >
+                  <a routerLink="/my-articles" class="btn btn-outline"
+                    >📝 Τα Άρθρα μου</a
                   >
                 </div>
               </div>
@@ -101,14 +109,27 @@ import { RouterLink } from '@angular/router';
     </div>
   `,
 })
-export class ProfileComponent {
+export class ProfileComponent implements OnInit {
+  private authService = inject(AuthService);
+  private route = inject(ActivatedRoute);
+
+  // Get current user from AuthService
+  currentUser = this.authService.currentUser;
+
   user = signal({
     name: 'Μιχάλης Καρκάνης',
     email: 'michalis@hobbistas.gr',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=michalis-profile',
+    avatar: this.currentUser()?.avatarUrl || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default-profile',
     bio: 'Passionate gamer, D&D enthusiast, και full-stack developer. Λάτρης του fantasy και των epic stories!',
-    stats: { articles: 47, followers: 1234, likes: 5678 },
+    stats: { articles: 0, followers: 0, likes: 0 },
   });
+
+  ngOnInit(): void {
+    // Update avatar from current user
+    if (this.currentUser()?.avatarUrl) {
+      this.user.update(u => ({ ...u, avatar: this.currentUser()!.avatarUrl! }));
+    }
+  }
 
   userArticles = signal([
     {

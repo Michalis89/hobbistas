@@ -260,7 +260,8 @@
           }
         </button>
 
-        <!-- Notifications -->
+        <!-- Notifications (Only for authenticated users) -->
+        @if (isAuthenticated()) {
         <div class="dropdown dropdown-end">
           <button
             class="btn btn-ghost btn-circle btn-sm indicator"
@@ -333,8 +334,10 @@
           </div>
           }
         </div>
+        }
 
-        <!-- Write Button -->
+        <!-- Write Button (Only for privileged users: admin, author, editor) -->
+        @if (canWriteArticles()) {
         <button class="btn btn-primary btn-sm gap-2 hidden md:flex">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -352,15 +355,18 @@
           </svg>
           Γράψε
         </button>
+        }
 
-        <!-- User Menu -->
+        <!-- User Menu / Login Button -->
+        @if (isAuthenticated()) {
+        <!-- Authenticated User Menu -->
         <div class="dropdown dropdown-end">
           <button class="btn btn-sm gap-2 pl-2" (click)="toggleUserMenu()">
             <div class="avatar online">
               <div
                 class="w-8 rounded-full ring ring-primary ring-offset-2 ring-offset-base-100"
               >
-                <img [src]="currentUser().avatar" [alt]="currentUser().name" />
+                <img [src]="currentUser()?.avatarUrl || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'" [alt]="currentUser()?.displayName || 'User'" />
               </div>
             </div>
           </button>
@@ -375,19 +381,21 @@
                 <div class="avatar online">
                   <div class="w-12 rounded-full">
                     <img
-                      [src]="currentUser().avatar"
-                      [alt]="currentUser().name"
+                      [src]="currentUser()?.avatarUrl || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default'"
+                      [alt]="currentUser()?.displayName || 'User'"
                     />
                   </div>
                 </div>
                 <div class="flex-1 min-w-0">
-                  <p class="font-bold truncate">{{ currentUser().name }}</p>
+                  <p class="font-bold truncate">{{ currentUser()?.displayName }}</p>
                   <p class="text-xs opacity-70 truncate">
-                    {{ currentUser().email }}
+                    {{ currentUser()?.email }}
                   </p>
+                  @if (currentUser()) {
                   <div class="badge badge-primary badge-sm mt-1">
-                    {{ currentUser().role }}
+                    {{ currentUser()!.roles && currentUser()!.roles.length > 0 ? currentUser()!.roles[0] : 'member' }}
                   </div>
+                  }
                 </div>
               </div>
             </li>
@@ -518,6 +526,29 @@
           </ul>
           }
         </div>
+        } @else {
+        <!-- Not Authenticated - Show Login Button -->
+        <a
+          [routerLink]="['/auth']"
+          class="btn btn-primary btn-sm gap-2"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-4 w-4"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"
+            />
+          </svg>
+          Σύνδεση
+        </a>
+        }
       </div>
     </div>
   </div>
@@ -567,7 +598,9 @@
       <a [routerLink]="['/new']" class="btn btn-sm btn-outline flex-1"
         >⭐ Νέα</a
       >
+      @if (canWriteArticles()) {
       <button class="btn btn-sm btn-primary">✍️ Γράψε</button>
+      }
     </div>
 
     <!-- Categories -->

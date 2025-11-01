@@ -5,6 +5,7 @@ import {
   effect,
   inject,
   signal,
+  computed,
   DestroyRef,
   PLATFORM_ID,
   ElementRef,
@@ -19,6 +20,7 @@ import {
 import { DOCUMENT, isPlatformBrowser, CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { filter } from 'rxjs';
+import { AuthService } from '@hobbistas/data-access';
 
 type Theme = 'core' | 'gaming';
 
@@ -55,6 +57,7 @@ export class HeaderComponent {
   private readonly destroyRef = inject(DestroyRef);
   private readonly el = inject(ElementRef<HTMLElement>);
   private readonly router = inject(Router);
+  private readonly authService = inject(AuthService);
 
   open = signal(false);
   theme = signal<Theme>('core');
@@ -64,12 +67,17 @@ export class HeaderComponent {
   userMenuOpen = signal(false);
   browseOpen = signal(false);
 
-  // Mock user data
-  currentUser = signal<User>({
-    name: 'Μιχάλης Καρκάνης',
-    email: 'michalis@hobbistas.gr',
-    avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=michalis-karkanis',
-    role: 'Admin',
+  // User from AuthService
+  currentUser = this.authService.currentUser;
+  isAuthenticated = this.authService.isAuthenticated;
+
+  // Check if user has write privileges (admin, author, or editor)
+  canWriteArticles = computed(() => {
+    const user = this.currentUser();
+    if (!user || !user.roles) return false;
+
+    const privilegedRoles = ['admin', 'author', 'editor'];
+    return user.roles.some((role: string) => privilegedRoles.includes(role));
   });
 
   // Mock notifications
@@ -291,7 +299,15 @@ export class HeaderComponent {
 
   logout() {
     console.log('Logging out...');
-    // Implement logout functionality here
+    this.authService.logout().subscribe({
+      next: () => {
+        console.log('✅ Logged out successfully');
+        this.userMenuOpen.set(false);
+      },
+      error: (err) => {
+        console.error('❌ Logout error:', err);
+      },
+    });
   }
 
   // ----- Mega menu (Browse) -----
@@ -320,8 +336,11 @@ export class HeaderComponent {
   @HostListener('document:click', ['$event'])
   onDocClick(ev: MouseEvent) {
     if (!this.el.nativeElement.contains(ev.target as Node)) {
-      this.closeBrowse();
-      (this.doc.activeElement as HTMLElement | null)?.blur();
+      // Κάνουμε blur μόνο αν το browse menu είναι ανοιχτό
+      if (this.browseOpen()) {
+        this.closeBrowse();
+        (this.doc.activeElement as HTMLElement | null)?.blur();
+      }
     }
   }
 

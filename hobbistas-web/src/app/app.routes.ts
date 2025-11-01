@@ -5,6 +5,7 @@ import {
   UrlSegment,
   ActivatedRouteSnapshot,
 } from '@angular/router';
+import { authGuard, guestGuard } from '@hobbistas/data-access';
 
 type CategoryMeta = { title: string; category: string };
 
@@ -93,9 +94,18 @@ export const appRoutes: Route[] = [
       import('./pages/community/community').then((m) => m.CommunityComponent),
   },
 
-  // User Profile
+  // Auth (Login/Signup) - Guest only
+  {
+    path: 'auth',
+    canActivate: [guestGuard],
+    loadComponent: () =>
+      import('./pages/auth/auth.component').then((m) => m.AuthComponent),
+  },
+
+  // User Profile (public - can view others' profiles)
   {
     path: 'profile',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./pages/profile/profile').then((m) => m.ProfileComponent),
   },
@@ -105,25 +115,28 @@ export const appRoutes: Route[] = [
       import('./pages/profile/profile').then((m) => m.ProfileComponent),
   },
 
-  // My Articles
+  // My Articles (protected)
   {
     path: 'my-articles',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./pages/my-articles/my-articles').then(
         (m) => m.MyArticlesComponent,
       ),
   },
 
-  // Favorites
+  // Favorites (protected)
   {
     path: 'favorites',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./pages/favorites/favorites').then((m) => m.FavoritesComponent),
   },
 
-  // Settings
+  // Settings (protected)
   {
     path: 'settings',
+    canActivate: [authGuard],
     loadComponent: () =>
       import('./pages/settings/settings').then((m) => m.SettingsComponent),
   },

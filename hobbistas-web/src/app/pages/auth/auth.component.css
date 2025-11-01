@@ -1,0 +1,21 @@
+/* Auth Component Styles */
+
+/* Smooth transitions for form elements */
+.input,
+.btn {
+  transition: all 0.2s ease;
+}
+
+/* Error input state */
+.input-error {
+  border-color: hsl(var(--er));
+}
+
+/* Tab animations */
+.tab {
+  transition: all 0.3s ease;
+}
+
+.tab-active {
+  font-weight: 600;
+}

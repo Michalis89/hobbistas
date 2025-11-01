@@ -1,6 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '@hobbistas/data-access';
 
 @Component({
   selector: 'app-favorites',
@@ -91,6 +92,11 @@ import { RouterLink } from '@angular/router';
   ],
 })
 export class FavoritesComponent {
+  private authService = inject(AuthService);
+
+  // Get current user
+  currentUser = this.authService.currentUser;
+
   favorites = signal([
     {
       id: '1',

@@ -195,3 +195,40 @@ export interface TrendingTag {
   count: number;
   growth: number; // percentage
 }
+
+// ========================================
+// Authentication Models
+// ========================================
+
+export interface LoginCredentials {
+  email: string;
+  password: string;
+}
+
+export interface RegisterData {
+  email: string;
+  password: string;
+  username: string;
+  displayName: string;
+}
+
+export interface AuthResponse {
+  user: User;
+  accessToken: string;
+  refreshToken?: string;
+}
+
+export interface AuthUser {
+  id: string;
+  email: string;
+  username: string;
+  displayName: string;
+  avatarUrl?: string;
+  roles: Array<'author' | 'editor' | 'admin' | 'member'>;
+}
+
+export interface UpdateProfileData {
+  displayName?: string;
+  bio?: string;
+  avatarUrl?: string;
+}

@@ -1,6 +1,7 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
+import { AuthService } from '@hobbistas/data-access';
 
 @Component({
   selector: 'app-my-articles',
@@ -13,7 +14,7 @@ import { RouterLink } from '@angular/router';
           <div>
             <h1 class="text-4xl font-bold">📝 Τα Άρθρα μου</h1>
             <p class="opacity-70 mt-2">
-              {{ articles().length }} δημοσιευμένα άρθρα
+              {{ currentUser()?.displayName }} · {{ articles().length }} άρθρα
             </p>
           </div>
           <button class="btn btn-primary gap-2">
@@ -93,6 +94,11 @@ import { RouterLink } from '@angular/router';
   `,
 })
 export class MyArticlesComponent {
+  private authService = inject(AuthService);
+
+  // Get current user
+  currentUser = this.authService.currentUser;
+
   publishedCount = computed(
     () => this.articles().filter((a) => !a.draft).length,
   );

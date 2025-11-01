@@ -49,8 +49,15 @@
       <p class="text-lg opacity-70">Τα καλύτερα άρθρα από την κοινότητά μας</p>
     </div>
 
+    <!-- Loading state -->
+    @if (articlesLoading()) {
+      <div class="flex justify-center items-center py-20">
+        <span class="loading loading-spinner loading-lg text-primary"></span>
+      </div>
+    }
+
     <div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-      @for (article of featuredArticles; track article.id) {
+      @for (article of featuredArticles(); track article.id) {
       <div
         class="card bg-base-100 shadow-xl hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
       >
@@ -61,7 +68,7 @@
             class="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
           />
           <div class="badge badge-primary absolute top-4 right-4">
-            {{ article.categoryLabel }}
+            {{ article.category }}
           </div>
         </figure>
         <div class="card-body">
@@ -71,21 +78,21 @@
           <div class="flex items-center gap-3 mt-4">
             <div class="avatar">
               <div class="w-10 rounded-full">
-                <img [src]="article.authorAvatar" [alt]="article.author" />
+                <img [src]="article.author.avatarUrl" [alt]="article.author.displayName" />
               </div>
             </div>
             <div class="flex-1">
-              <p class="font-semibold text-sm">{{ article.author }}</p>
+              <p class="font-semibold text-sm">{{ article.author.displayName }}</p>
               <p class="text-xs opacity-60">
-                {{ article.publishedAt }} · {{ article.readTime }}
+                {{ article.publishedAt }} · {{ article.stats.readTime }} λεπτά
               </p>
             </div>
           </div>
 
           <div class="card-actions justify-between items-center mt-4">
             <div class="flex gap-4 text-sm opacity-70">
-              <span>👁️ {{ article.views }}</span>
-              <span>❤️ {{ article.likes }}</span>
+              <span>👁️ {{ article.stats.views }}</span>
+              <span>❤️ {{ article.stats.likes }}</span>
             </div>
             <button class="btn btn-primary btn-sm">Διάβασε</button>
           </div>
@@ -110,20 +117,22 @@
       <p class="text-lg opacity-70">Βρες το χόμπι που σε ενδιαφέρει</p>
     </div>
 
+    <!-- Loading state -->
+    @if (categoriesLoading()) {
+      <div class="flex justify-center items-center py-20">
+        <span class="loading loading-spinner loading-lg text-primary"></span>
+      </div>
+    }
+
     <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-      @for (category of categories; track category.id) {
+      @for (category of categories(); track category.id) {
       <a
-        [routerLink]="category.route"
+        [routerLink]="category.path"
         class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300 group overflow-hidden"
       >
         <figure class="h-48 overflow-hidden relative">
-          <img
-            [src]="category.coverImage"
-            [alt]="category.name"
-            class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-          />
           <div
-            class="absolute inset-0 bg-gradient-to-t {{ category.color }} opacity-70"
+            class="absolute inset-0 bg-gradient-to-br {{ category.color }}"
           ></div>
           <div class="absolute inset-0 flex items-center justify-center">
             <span class="text-7xl">{{ category.icon }}</span>
@@ -131,7 +140,7 @@
         </figure>
         <div class="card-body">
           <h3 class="card-title justify-between">
-            <span>{{ category.name }}</span>
+            <span>{{ category.label }}</span>
             <div class="badge badge-secondary">{{ category.articleCount }}</div>
           </h3>
           <p class="text-sm opacity-70">{{ category.description }}</p>
@@ -156,7 +165,7 @@
     </div>
 
     <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-      @for (article of latestArticles; track article.id) {
+      @for (article of latestArticles(); track article.id) {
       <div
         class="card bg-base-100 shadow-lg hover:shadow-xl transition-all duration-300"
       >
@@ -169,7 +178,7 @@
         </figure>
         <div class="card-body p-5">
           <div class="badge badge-sm badge-primary mb-2">
-            {{ article.categoryLabel }}
+            {{ article.category }}
           </div>
           <h3 class="font-bold text-base line-clamp-2">{{ article.title }}</h3>
           <p class="text-xs opacity-70 line-clamp-2">{{ article.excerpt }}</p>
@@ -177,14 +186,14 @@
           <div class="flex items-center gap-2 mt-3">
             <div class="avatar">
               <div class="w-6 rounded-full">
-                <img [src]="article.authorAvatar" [alt]="article.author" />
+                <img [src]="article.author.avatarUrl" [alt]="article.author.displayName" />
               </div>
             </div>
-            <p class="text-xs font-semibold">{{ article.author }}</p>
+            <p class="text-xs font-semibold">{{ article.author.displayName }}</p>
           </div>
 
           <div class="flex justify-between text-xs opacity-60 mt-2">
-            <span>{{ article.readTime }}</span>
+            <span>{{ article.stats.readTime }} λεπτά</span>
             <span>{{ article.publishedAt }}</span>
           </div>
         </div>
