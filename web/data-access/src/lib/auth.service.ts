@@ -1,4 +1,4 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { Observable, BehaviorSubject, tap, catchError, of } from 'rxjs';
@@ -28,8 +28,8 @@ export class AuthService {
   private readonly USER_KEY = 'hobbistas_user';
 
   // BehaviorSubject για να κρατάμε το current user
-  private currentUserSubject = new BehaviorSubject<AuthUser | null>(
-    this.getUserFromStorage()
+  private readonly currentUserSubject = new BehaviorSubject<AuthUser | null>(
+    this.getUserFromStorage(),
   );
 
   // Observable για subscription από components
@@ -40,11 +40,9 @@ export class AuthService {
 
   // Computed signal για authentication status
   public isAuthenticated = computed(() => this.currentUser() !== null);
-
-  constructor(
-    private http: HttpClient,
-    private router: Router
-  ) {
+  private readonly http = inject(HttpClient);
+  private readonly router = inject(Router);
+  constructor() {
     // Αν υπάρχει token στο storage, κάνε validate
     const token = this.getToken();
     if (token) {
@@ -64,7 +62,7 @@ export class AuthService {
       catchError((error) => {
         console.error('❌ Registration failed:', error);
         throw error;
-      })
+      }),
     );
   }
 
@@ -72,16 +70,18 @@ export class AuthService {
    * Login με email και password
    */
   login(credentials: LoginCredentials): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(`${this.API_URL}/login`, credentials).pipe(
-      tap((response) => {
-        console.log('✅ Login successful');
-        this.handleAuthSuccess(response);
-      }),
-      catchError((error) => {
-        console.error('❌ Login failed:', error);
-        throw error;
-      })
-    );
+    return this.http
+      .post<AuthResponse>(`${this.API_URL}/login`, credentials)
+      .pipe(
+        tap((response) => {
+          console.log('✅ Login successful');
+          this.handleAuthSuccess(response);
+        }),
+        catchError((error) => {
+          console.error('❌ Login failed:', error);
+          throw error;
+        }),
+      );
   }
 
   /**
@@ -98,14 +98,17 @@ export class AuthService {
         // Ακόμα και αν fail το backend call, κάνε local logout
         this.handleLogout();
         return of(void 0);
-      })
+      }),
     );
   }
 
   /**
    * Update user profile
    */
-  updateProfile(data: UpdateProfileData, avatarFile?: File): Observable<AuthUser> {
+  updateProfile(
+    data: UpdateProfileData,
+    avatarFile?: File,
+  ): Observable<AuthUser> {
     // Αν έχουμε avatar file, χρησιμοποιούμε FormData
     if (avatarFile) {
       const formData = new FormData();
@@ -113,16 +116,18 @@ export class AuthService {
       if (data.bio) formData.append('bio', data.bio);
       formData.append('avatar', avatarFile);
 
-      return this.http.patch<AuthUser>(`${this.API_URL}/profile`, formData).pipe(
-        tap((user) => {
-          console.log('✅ Profile updated with avatar');
-          this.updateUserState(user);
-        }),
-        catchError((error) => {
-          console.error('❌ Profile update failed:', error);
-          throw error;
-        })
-      );
+      return this.http
+        .patch<AuthUser>(`${this.API_URL}/profile`, formData)
+        .pipe(
+          tap((user) => {
+            console.log('✅ Profile updated with avatar');
+            this.updateUserState(user);
+          }),
+          catchError((error) => {
+            console.error('❌ Profile update failed:', error);
+            throw error;
+          }),
+        );
     } else {
       // Χωρίς avatar, στέλνουμε JSON
       return this.http.patch<AuthUser>(`${this.API_URL}/profile`, data).pipe(
@@ -133,7 +138,7 @@ export class AuthService {
         catchError((error) => {
           console.error('❌ Profile update failed:', error);
           throw error;
-        })
+        }),
       );
     }
   }

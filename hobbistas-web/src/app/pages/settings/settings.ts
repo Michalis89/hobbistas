@@ -215,7 +215,9 @@ import { UpdateProfileData } from '@hobbistas/models';
       @if (showDeleteModal()) {
         <div class="modal modal-open">
           <div class="modal-box">
-            <h3 class="font-bold text-lg text-error">⚠️ Διαγραφή Λογαριασμού</h3>
+            <h3 class="font-bold text-lg text-error">
+              ⚠️ Διαγραφή Λογαριασμού
+            </h3>
             <p class="py-4">
               Αυτή η ενέργεια είναι <strong>μόνιμη</strong> και δεν μπορεί να
               αναιρεθεί. Όλα τα δεδομένα σου, τα άρθρα, και οι αλληλεπιδράσεις
@@ -349,7 +351,8 @@ export class SettingsComponent implements OnInit {
 
           let errorMessage = 'Σφάλμα κατά την αποθήκευση των ρυθμίσεων.';
           if (error.status === 413) {
-            errorMessage = 'Η εικόνα είναι πολύ μεγάλη. Δοκίμασε μια μικρότερη εικόνα.';
+            errorMessage =
+              'Η εικόνα είναι πολύ μεγάλη. Δοκίμασε μια μικρότερη εικόνα.';
           } else if (error.error?.message) {
             errorMessage = `Σφάλμα: ${error.error.message}`;
           }
@@ -383,7 +386,9 @@ export class SettingsComponent implements OnInit {
     this.showDeleteModal.set(false);
     this.deleteConfirmText.set('');
 
-    alert('⚠️ Η διαγραφή λογαριασμού θα υλοποιηθεί σύντομα.\nΓια τώρα αυτό είναι ένα placeholder.');
+    alert(
+      '⚠️ Η διαγραφή λογαριασμού θα υλοποιηθεί σύντομα.\nΓια τώρα αυτό είναι ένα placeholder.',
+    );
   }
 
   cancelDelete() {

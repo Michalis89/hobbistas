@@ -36,7 +36,11 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateData: any, @GetUser('id') currentUserId: string) {
+  update(
+    @Param('id') id: string,
+    @Body() updateData: any,
+    @GetUser('id') currentUserId: string,
+  ) {
     // TODO: Add guard να επιτρέπει update μόνο στον ίδιο τον user
     return this.usersService.update(id, updateData);
   }

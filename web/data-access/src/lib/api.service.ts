@@ -1,5 +1,9 @@
 import { Injectable, inject } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpHeaders,
+  HttpErrorResponse,
+} from '@angular/common/http';
 import { Observable, throwError, of } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { Article, User, CategoryInfo } from '@hobbistas/models';
@@ -98,10 +102,10 @@ export class ApiService {
     bio?: string;
   }): Observable<{ user: User; access_token: string }> {
     return this.http
-      .post<{ user: User; access_token: string }>(
-        `${this.apiUrl}/auth/register`,
-        data,
-      )
+      .post<{
+        user: User;
+        access_token: string;
+      }>(`${this.apiUrl}/auth/register`, data)
       .pipe(
         tap((response) => {
           // Save token
@@ -119,7 +123,10 @@ export class ApiService {
   /**
    * Login
    */
-  login(email: string, password: string): Observable<{ user: User; access_token: string }> {
+  login(
+    email: string,
+    password: string,
+  ): Observable<{ user: User; access_token: string }> {
     return this.http
       .post<{ user: User; access_token: string }>(`${this.apiUrl}/auth/login`, {
         email,
@@ -159,11 +166,7 @@ export class ApiService {
   getCurrentUser(): Observable<User | null> {
     return this.http
       .get<User>(`${this.apiUrl}/auth/me`, { headers: this.getHeaders() })
-      .pipe(
-        catchError(
-          this.handleError<User | null>('getCurrentUser', null),
-        ),
-      );
+      .pipe(catchError(this.handleError<User | null>('getCurrentUser', null)));
   }
 
   // ==========================================
@@ -215,7 +218,10 @@ export class ApiService {
     return this.http.get<Article>(`${this.apiUrl}/articles/${slug}`).pipe(
       map((article) => this.ensureArticleHasValues(article)),
       catchError(
-        this.handleError<Article>('getArticleBySlug', this.getFallbackArticle()),
+        this.handleError<Article>(
+          'getArticleBySlug',
+          this.getFallbackArticle(),
+        ),
       ),
     );
   }
@@ -247,9 +253,7 @@ export class ApiService {
   getUserById(id: string): Observable<User> {
     return this.http.get<User>(`${this.apiUrl}/users/${id}`).pipe(
       map((user) => this.ensureUserHasValues(user)),
-      catchError(
-        this.handleError<User>('getUserById', this.getFallbackUser()),
-      ),
+      catchError(this.handleError<User>('getUserById', this.getFallbackUser())),
     );
   }
 
@@ -258,9 +262,10 @@ export class ApiService {
    */
   getUsers(page = 1, limit = 20): Observable<{ data: User[]; meta: any }> {
     return this.http
-      .get<{ data: User[]; meta: any }>(
-        `${this.apiUrl}/users?page=${page}&limit=${limit}`,
-      )
+      .get<{
+        data: User[];
+        meta: any;
+      }>(`${this.apiUrl}/users?page=${page}&limit=${limit}`)
       .pipe(
         map((response) => ({
           ...response,
@@ -290,13 +295,17 @@ export class ApiService {
           label: cat.label || 'εδω ειναι απο το backend label',
           icon: cat.icon || '📦',
           path: cat.path || `/${cat.id}`,
-          description: cat.description || 'εδω ειναι απο το backend description',
+          description:
+            cat.description || 'εδω ειναι απο το backend description',
           color: cat.color || 'from-gray-500 to-gray-600',
           articleCount: cat.article_count || 0,
         })),
       ),
       catchError(
-        this.handleError<CategoryInfo[]>('getCategories', this.getFallbackCategories()),
+        this.handleError<CategoryInfo[]>(
+          'getCategories',
+          this.getFallbackCategories(),
+        ),
       ),
     );
   }
@@ -315,7 +324,9 @@ export class ApiService {
         {},
         { headers: this.getHeaders() },
       )
-      .pipe(catchError(this.handleError('likeArticle', { message: 'Like added' })));
+      .pipe(
+        catchError(this.handleError('likeArticle', { message: 'Like added' })),
+      );
   }
 
   /**
@@ -327,7 +338,9 @@ export class ApiService {
         headers: this.getHeaders(),
       })
       .pipe(
-        catchError(this.handleError('unlikeArticle', { message: 'Like removed' })),
+        catchError(
+          this.handleError('unlikeArticle', { message: 'Like removed' }),
+        ),
       );
   }
 
@@ -386,8 +399,12 @@ export class ApiService {
       category: article?.category_id || article?.category || 'blog',
       author: this.ensureUserHasValues(article?.author || article?.profiles),
       authorId: article?.author_id || article?.authorId || 'backend-author-id',
-      publishedAt: article?.published_at || article?.publishedAt || new Date().toISOString(),
-      updatedAt: article?.updated_at || article?.updatedAt || new Date().toISOString(),
+      publishedAt:
+        article?.published_at ||
+        article?.publishedAt ||
+        new Date().toISOString(),
+      updatedAt:
+        article?.updated_at || article?.updatedAt || new Date().toISOString(),
       draft: article?.is_draft ?? article?.draft ?? false,
       stats: {
         views: article?.stats?.views || article?.views_count || 0,
@@ -405,7 +422,10 @@ export class ApiService {
   private ensureUserHasValues(user: any): User {
     return {
       id: user?.id || 'temp-user-id',
-      displayName: user?.display_name || user?.displayName || 'εδω ειναι απο το backend ονομα',
+      displayName:
+        user?.display_name ||
+        user?.displayName ||
+        'εδω ειναι απο το backend ονομα',
       email: user?.email || 'backend@email.com',
       avatarUrl:
         user?.avatar_url ||
@@ -415,8 +435,10 @@ export class ApiService {
       roles: user?.roles || ['member'],
       stats: {
         articlesCount: user?.stats?.articlesCount || user?.articles_count || 0,
-        followersCount: user?.stats?.followersCount || user?.followers_count || 0,
-        followingCount: user?.stats?.followingCount || user?.following_count || 0,
+        followersCount:
+          user?.stats?.followersCount || user?.followers_count || 0,
+        followingCount:
+          user?.stats?.followingCount || user?.following_count || 0,
         likesReceived: user?.stats?.likesReceived || user?.likes_received || 0,
         commentsCount: user?.stats?.commentsCount || user?.comments_count || 0,
       },
@@ -433,7 +455,8 @@ export class ApiService {
       id: 'fallback-1',
       title: 'εδω ειναι απο το backend τιτλος',
       slug: 'backend-fallback',
-      excerpt: 'εδω ειναι απο το backend excerpt - το backend δεν ανταποκρίνεται',
+      excerpt:
+        'εδω ειναι απο το backend excerpt - το backend δεν ανταποκρίνεται',
       coverImageUrl: 'https://picsum.photos/seed/fallback/800/400',
       tags: ['fallback'],
       category: 'blog',

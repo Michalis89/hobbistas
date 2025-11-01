@@ -5,20 +5,24 @@ import { SupabaseService } from '../supabase/supabase.service';
 export class ArticlesService {
   private readonly logger = new Logger(ArticlesService.name);
 
-  constructor(private supabaseService: SupabaseService) {}
+  constructor(private readonly supabaseService: SupabaseService) {}
 
   async findAll(filters?: any) {
     let query = this.supabaseService
       .getClient()
       .from('articles')
-      .select('*, profiles!articles_author_id_fkey(display_name, username, avatar_url), categories(label, icon)')
+      .select(
+        '*, profiles!articles_author_id_fkey(display_name, username, avatar_url), categories(label, icon)',
+      )
       .eq('is_published', true);
 
     if (filters?.category) {
       query = query.eq('category_id', filters.category);
     }
 
-    const { data, error } = await query.order('published_at', { ascending: false });
+    const { data, error } = await query.order('published_at', {
+      ascending: false,
+    });
 
     if (error) throw new NotFoundException('Failed to fetch articles');
     return data;
@@ -119,11 +123,15 @@ export class ArticlesService {
   }
 
   private generateSlug(title: string): string {
-    return title
-      .toLowerCase()
-      .replace(/[^\w\s-]/g, '')
-      .replace(/\s+/g, '-')
-      .substring(0, 100) + '-' + Date.now();
+    return (
+      title
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, '')
+        .replace(/\s+/g, '-')
+        .substring(0, 100) +
+      '-' +
+      Date.now()
+    );
   }
 
   private calculateReadTime(content: string): number {

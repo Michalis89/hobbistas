@@ -24,6 +24,7 @@ npm install -D @types/passport-jwt @types/bcrypt
 ### 3. Configure Environment Variables
 
 1. Copy το `.env.example` σε `.env`:
+
    ```bash
    cp api/.env.example api/.env
    ```
@@ -35,12 +36,14 @@ npm install -D @types/passport-jwt @types/bcrypt
    - Copy το `service_role key` και βάλτο στο `SUPABASE_SERVICE_ROLE_KEY` (⚠️ Keep this secret!)
 
 3. Δημιούργησε ένα strong JWT secret:
+
    ```bash
    # Generate random secret (Linux/Mac)
    openssl rand -base64 32
 
    # ή use online generator: https://generate-secret.vercel.app/32
    ```
+
    Βάλτο στο `JWT_SECRET`
 
 ### 4. Enable Supabase Auth
@@ -70,6 +73,7 @@ curl http://localhost:3333/api/categories
 ## API Documentation
 
 ### Base URL
+
 ```
 http://localhost:3333/api
 ```
@@ -77,12 +81,14 @@ http://localhost:3333/api
 ### Available Endpoints
 
 #### Auth
+
 - `POST /api/auth/register` - Εγγραφή νέου χρήστη
 - `POST /api/auth/login` - Login
 - `POST /api/auth/logout` - Logout
 - `GET /api/auth/me` - Get current user (requires token)
 
 #### Users
+
 - `GET /api/users` - List users
 - `GET /api/users/:id` - Get user profile
 - `PATCH /api/users/:id` - Update user profile
@@ -91,6 +97,7 @@ http://localhost:3333/api
 - `GET /api/users/:id/following` - Get following
 
 #### Articles
+
 - `GET /api/articles` - List articles (with filters)
 - `GET /api/articles/trending` - Trending articles
 - `GET /api/articles/:slug` - Get article by slug
@@ -101,12 +108,14 @@ http://localhost:3333/api
 - `POST /api/articles/:id/view` - Increment views
 
 #### Comments
+
 - `GET /api/articles/:articleId/comments` - Get comments
 - `POST /api/articles/:articleId/comments` - Create comment
 - `PATCH /api/comments/:id` - Update comment
 - `DELETE /api/comments/:id` - Delete comment
 
 #### Interactions
+
 - `POST /api/articles/:id/like` - Like article
 - `DELETE /api/articles/:id/like` - Unlike article
 - `POST /api/articles/:id/bookmark` - Bookmark article
@@ -115,13 +124,16 @@ http://localhost:3333/api
 - `DELETE /api/users/:id/follow` - Unfollow user
 
 #### Categories
+
 - `GET /api/categories` - List all categories
 
 #### Tags
+
 - `GET /api/tags` - List all tags
 - `GET /api/tags/trending` - Trending tags
 
 #### Notifications
+
 - `GET /api/notifications` - Get user notifications
 - `PATCH /api/notifications/:id/read` - Mark as read
 - `POST /api/notifications/read-all` - Mark all as read
@@ -129,14 +141,17 @@ http://localhost:3333/api
 ## Troubleshooting
 
 ### Database Connection Issues
+
 - Βεβαιώσου ότι το `SUPABASE_URL` και `SUPABASE_SERVICE_ROLE_KEY` είναι σωστά
 - Check στο Supabase Dashboard αν το project είναι active
 
 ### Authentication Issues
+
 - Βεβαιώσου ότι το `JWT_SECRET` είναι set στο `.env`
 - Check αν το Supabase Auth είναι enabled
 
 ### Migration Errors
+
 - Ξανατρέξε το SQL migration
 - Check το Supabase SQL logs για errors
 

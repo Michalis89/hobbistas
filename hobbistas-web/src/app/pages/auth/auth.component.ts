@@ -14,12 +14,12 @@ import { AuthService } from '@hobbistas/data-access';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './auth.component.html',
-  styleUrl: './auth.component.css',
+  styleUrl: './auth.component.scss',
 })
 export class AuthComponent {
-  private fb = inject(FormBuilder);
-  private authService = inject(AuthService);
-  private router = inject(Router);
+  private readonly fb = inject(FormBuilder);
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
 
   // State
   activeTab = signal<'login' | 'signup'>('login');
@@ -85,7 +85,7 @@ export class AuthComponent {
         console.error('❌ Login error:', err);
         this.loading.set(false);
         this.errorMessage.set(
-          err.error?.message || 'Αποτυχία σύνδεσης. Ελέγξτε τα στοιχεία σας.'
+          err.error?.message || 'Αποτυχία σύνδεσης. Ελέγξτε τα στοιχεία σας.',
         );
       },
     });
@@ -130,7 +130,7 @@ export class AuthComponent {
         this.loading.set(false);
         this.errorMessage.set(
           err.error?.message ||
-            'Αποτυχία εγγραφής. Δοκιμάστε με διαφορετικό email ή username.'
+            'Αποτυχία εγγραφής. Δοκιμάστε με διαφορετικό email ή username.',
         );
       },
     });
@@ -167,7 +167,7 @@ export class AuthComponent {
         console.error('❌ DEV: Auto-login failed:', err);
         this.loading.set(false);
         this.errorMessage.set(
-          'Dev auto-login failed. Make sure test user exists (test@hobbistas.com)'
+          'Dev auto-login failed. Make sure test user exists (test@hobbistas.com)',
         );
       },
     });
@@ -177,10 +177,10 @@ export class AuthComponent {
    * Mark all form fields as touched to show validation errors
    */
   private markFormGroupTouched(formGroup: FormGroup): void {
-    Object.keys(formGroup.controls).forEach((key) => {
+    for (const key of Object.keys(formGroup.controls)) {
       const control = formGroup.get(key);
       control?.markAsTouched();
-    });
+    }
   }
 
   /**

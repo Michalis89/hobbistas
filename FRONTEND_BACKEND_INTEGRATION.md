@@ -7,6 +7,7 @@
 **File:** `web/data-access/src/lib/api.service.ts`
 
 ✅ **Features:**
+
 - **Automatic Error Handling** - Δεν σκάνε τα components με errors!
 - **Fallback Values** - Όταν το backend δεν ανταποκρίνεται, βλέπεις: `"εδω ειναι απο το backend τιτλος"`
 - **JWT Token Management** - Automatic save/load/remove στο localStorage
@@ -16,6 +17,7 @@
 ### 2. Available API Methods
 
 #### Auth
+
 ```typescript
 apiService.register({ email, password, username, displayName, bio? })
 apiService.login(email, password)
@@ -24,6 +26,7 @@ apiService.getCurrentUser()
 ```
 
 #### Articles
+
 ```typescript
 apiService.getArticles(filters?) // Όλα τα articles
 apiService.getTrendingArticles(limit?) // Trending
@@ -32,22 +35,25 @@ apiService.createArticle(data) // Create new
 ```
 
 #### Users
+
 ```typescript
 apiService.getUserById(id)
 apiService.getUsers(page?, limit?)
 ```
 
 #### Categories
+
 ```typescript
-apiService.getCategories() // Όλες οι κατηγορίες
+apiService.getCategories(); // Όλες οι κατηγορίες
 ```
 
 #### Interactions
+
 ```typescript
-apiService.likeArticle(articleId)
-apiService.unlikeArticle(articleId)
-apiService.bookmarkArticle(articleId)
-apiService.getUserBookmarks()
+apiService.likeArticle(articleId);
+apiService.unlikeArticle(articleId);
+apiService.bookmarkArticle(articleId);
+apiService.getUserBookmarks();
 ```
 
 ---
@@ -83,7 +89,7 @@ export class HomeComponent implements OnInit {
         // Το API Service επιστρέφει fallback values automatically
         console.error('Error loading articles:', err);
         this.loading.set(false);
-      }
+      },
     });
   }
 }
@@ -181,6 +187,7 @@ API Call → Backend Response → Real Data
 ```
 
 **Βλέπεις:**
+
 - "Baldur's Gate 3: Ο Απόλυτος Οδηγός"
 - Πραγματικά avatars
 - Κανονικά στατιστικά
@@ -192,6 +199,7 @@ API Call → Empty Backend Response → Fallback Values
 ```
 
 **Βλέπεις:**
+
 - "εδω ειναι απο το backend τιτλος"
 - Fallback avatars
 - Zeroed stats
@@ -203,6 +211,7 @@ API Call → Network Error → Fallback Values
 ```
 
 **Βλέπεις:**
+
 - "εδω ειναι απο το backend τιτλος - το backend δεν ανταποκρίνεται"
 - Fallback avatars
 - Error logs στο console
@@ -216,20 +225,22 @@ API Call → Network Error → Fallback Values
 ### 1. Register New User
 
 ```typescript
-this.apiService.register({
-  email: 'test@hobbistas.gr',
-  password: 'StrongPass123!',
-  username: 'testuser',
-  displayName: 'Test User',
-  bio: 'I love coding!'
-}).subscribe({
-  next: (response) => {
-    // ✅ Token saved to localStorage automatically
-    // ✅ User object available
-    console.log('User registered:', response.user);
-    this.router.navigate(['/']);
-  }
-});
+this.apiService
+  .register({
+    email: 'test@hobbistas.gr',
+    password: 'StrongPass123!',
+    username: 'testuser',
+    displayName: 'Test User',
+    bio: 'I love coding!',
+  })
+  .subscribe({
+    next: (response) => {
+      // ✅ Token saved to localStorage automatically
+      // ✅ User object available
+      console.log('User registered:', response.user);
+      this.router.navigate(['/']);
+    },
+  });
 ```
 
 ### 2. Login
@@ -239,7 +250,7 @@ this.apiService.login(email, password).subscribe({
   next: (response) => {
     // ✅ Token saved automatically
     console.log('Logged in:', response.user);
-  }
+  },
 });
 ```
 
@@ -254,7 +265,7 @@ this.apiService.getUserBookmarks().subscribe({
   },
   error: () => {
     // Αν δεν είσαι logged in, επιστρέφει empty array (fallback)
-  }
+  },
 });
 ```
 
@@ -265,7 +276,7 @@ this.apiService.logout().subscribe({
   next: () => {
     // ✅ Token removed from localStorage
     this.router.navigate(['/login']);
-  }
+  },
 });
 ```
 
@@ -298,6 +309,7 @@ this.apiService.logout().subscribe({
 ### Problem: "Connection refused" errors
 
 **Solution:**
+
 ```bash
 # Βεβαιώσου ότι το backend τρέχει
 npm run start:api
@@ -309,6 +321,7 @@ npm run start:api
 ### Problem: "401 Unauthorized" για protected routes
 
 **Solution:**
+
 ```typescript
 // 1. Login first
 this.apiService.login(email, password).subscribe();
@@ -320,6 +333,7 @@ this.apiService.getUserBookmarks().subscribe();
 ### Problem: Βλέπω μόνο fallback values
 
 **Reasons:**
+
 1. **Backend δεν τρέχει** - Τρέξε `npm run start:api`
 2. **Backend δεν έχει data** - Seed the database (see BACKEND_README.md)
 3. **CORS error** - Check backend logs, add CORS config
@@ -327,6 +341,7 @@ this.apiService.getUserBookmarks().subscribe();
 ### Problem: TypeScript errors με models
 
 **Solution:**
+
 ```bash
 # Rebuild the shared models library
 nx build @hobbistas/models
@@ -343,13 +358,13 @@ npm run start:web
 
 ```css
 /* Highlight fallback text */
-[class*="backend"] {
+[class*='backend'] {
   color: orange;
   font-style: italic;
 }
 
 /* Or check if text contains "εδω ειναι" */
-.article-title:has-text("εδω ειναι") {
+.article-title:has-text('εδω ειναι') {
   background: yellow;
 }
 ```
@@ -386,14 +401,13 @@ ngOnInit() {
 ```
 
 Template:
+
 ```html
 @if (loading()) {
-  <div class="loading loading-spinner"></div>
-} @else {
-  @for (article of articles(); track article.id) {
-    <app-article-card [article]="article" />
-  }
-}
+<div class="loading loading-spinner"></div>
+} @else { @for (article of articles(); track article.id) {
+<app-article-card [article]="article" />
+} }
 ```
 
 ### 3. Add Auth UI
@@ -423,6 +437,7 @@ Template:
 **Το frontend είναι έτοιμο να συνδεθεί με το backend!** 🚀
 
 Απλά τρέξε:
+
 1. Backend: `npm run start:api` (Terminal 1)
 2. Frontend: `npm run start:web` (Terminal 2)
 3. Open: http://localhost:4200

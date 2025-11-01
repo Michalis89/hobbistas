@@ -1,4 +1,11 @@
-import { Controller, Post, Delete, Get, Param, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Delete,
+  Get,
+  Param,
+  UseGuards,
+} from '@nestjs/common';
 import { InteractionsService } from './interactions.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { GetUser } from '../auth/decorators/get-user.decorator';
@@ -19,12 +26,18 @@ export class InteractionsController {
   }
 
   @Post('articles/:id/bookmark')
-  bookmarkArticle(@Param('id') articleId: string, @GetUser('id') userId: string) {
+  bookmarkArticle(
+    @Param('id') articleId: string,
+    @GetUser('id') userId: string,
+  ) {
     return this.interactionsService.bookmarkArticle(userId, articleId);
   }
 
   @Delete('articles/:id/bookmark')
-  unbookmarkArticle(@Param('id') articleId: string, @GetUser('id') userId: string) {
+  unbookmarkArticle(
+    @Param('id') articleId: string,
+    @GetUser('id') userId: string,
+  ) {
     return this.interactionsService.unbookmarkArticle(userId, articleId);
   }
 
@@ -39,7 +52,10 @@ export class InteractionsController {
   }
 
   @Delete('users/:id/follow')
-  unfollowUser(@Param('id') followingId: string, @GetUser('id') userId: string) {
+  unfollowUser(
+    @Param('id') followingId: string,
+    @GetUser('id') userId: string,
+  ) {
     return this.interactionsService.unfollowUser(userId, followingId);
   }
 }

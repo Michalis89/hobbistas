@@ -34,7 +34,9 @@ import { AuthService } from '@hobbistas/data-access';
 
               <!-- Info -->
               <div class="flex-1">
-                <h1 class="text-4xl font-bold">{{ currentUser()?.displayName || 'User' }}</h1>
+                <h1 class="text-4xl font-bold">
+                  {{ currentUser()?.displayName || 'User' }}
+                </h1>
                 <p class="text-lg opacity-70">{{ currentUser()?.email }}</p>
                 <p class="mt-2">{{ user().bio }}</p>
 
@@ -119,7 +121,9 @@ export class ProfileComponent implements OnInit {
   user = signal({
     name: 'Μιχάλης Καρκάνης',
     email: 'michalis@hobbistas.gr',
-    avatar: this.currentUser()?.avatarUrl || 'https://api.dicebear.com/7.x/avataaars/svg?seed=default-profile',
+    avatar:
+      this.currentUser()?.avatarUrl ||
+      'https://api.dicebear.com/7.x/avataaars/svg?seed=default-profile',
     bio: 'Passionate gamer, D&D enthusiast, και full-stack developer. Λάτρης του fantasy και των epic stories!',
     stats: { articles: 0, followers: 0, likes: 0 },
   });
@@ -127,7 +131,10 @@ export class ProfileComponent implements OnInit {
   ngOnInit(): void {
     // Update avatar from current user
     if (this.currentUser()?.avatarUrl) {
-      this.user.update(u => ({ ...u, avatar: this.currentUser()!.avatarUrl! }));
+      this.user.update((u) => ({
+        ...u,
+        avatar: this.currentUser()!.avatarUrl!,
+      }));
     }
   }
 

@@ -44,7 +44,7 @@ export const authGuard: CanActivateFn = (route, state) => {
  * }
  */
 export const roleGuard = (
-  role: 'author' | 'editor' | 'admin' | 'member'
+  role: 'author' | 'editor' | 'admin' | 'member',
 ): CanActivateFn => {
   return (route, state) => {
     const authService = inject(AuthService);
@@ -62,7 +62,7 @@ export const roleGuard = (
     }
 
     console.warn(
-      `🔒 Access denied to ${state.url}. Insufficient permissions (requires ${role}).`
+      `🔒 Access denied to ${state.url}. Insufficient permissions (requires ${role}).`,
     );
 
     // Redirect to home if user doesn't have required role

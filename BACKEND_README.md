@@ -5,9 +5,11 @@
 Έχω δημιουργήσει ένα **production-ready NestJS backend** με Supabase PostgreSQL database. Ακολουθεί λίστα με όλα όσα έφτιαξα:
 
 ### 📦 1. Database Schema (Supabase PostgreSQL)
+
 **File:** `api/supabase/migrations/001_initial_schema.sql`
 
 ✅ **Tables:**
+
 - `profiles` - User profiles με stats και social links
 - `categories` - Article categories (Gaming, D&D, Books, κλπ)
 - `articles` - Articles με full-text search
@@ -20,6 +22,7 @@
 - `notifications` - User notifications
 
 ✅ **Features:**
+
 - Full-text search με `tsvector`
 - Denormalized counts με triggers (auto-update likes_count, followers_count, κλπ)
 - Row Level Security (RLS) policies
@@ -30,15 +33,18 @@
 ---
 
 ### 🔐 2. Auth Module
+
 **Path:** `api/src/auth/`
 
 ✅ **Endpoints:**
+
 - `POST /auth/register` - User registration
 - `POST /auth/login` - Login με JWT
 - `GET /auth/me` - Get current user
 - `POST /auth/logout` - Logout
 
 ✅ **Features:**
+
 - JWT authentication με Passport
 - Password validation με class-validator
 - Secure password hashing με Supabase Auth
@@ -49,9 +55,11 @@
 ---
 
 ### 👤 3. Users Module
+
 **Path:** `api/src/users/`
 
 ✅ **Endpoints:**
+
 - `GET /users` - List users (με pagination)
 - `GET /users/:id` - Get user profile
 - `GET /users/username/:username` - Get user by username
@@ -63,9 +71,11 @@
 ---
 
 ### 📝 4. Articles Module
+
 **Path:** `api/src/articles/`
 
 ✅ **Endpoints:**
+
 - `GET /articles` - List articles (με filters)
 - `GET /articles/trending` - Trending articles
 - `GET /articles/:slug` - Get article by slug (auto-increment views)
@@ -75,6 +85,7 @@
 - `DELETE /articles/:id` - Delete article
 
 ✅ **Features:**
+
 - Auto-generate slug από title
 - Auto-calculate read time
 - View counter
@@ -84,12 +95,15 @@
 ---
 
 ### 🗂️ 5. Categories Module
+
 **Path:** `api/src/categories/`
 
 ✅ **Endpoints:**
+
 - `GET /categories` - List all categories
 
 ✅ **Pre-seeded Categories:**
+
 - Gaming 🎮
 - D&D 🎲
 - Φαντασία 🐉
@@ -102,9 +116,11 @@
 ---
 
 ### ❤️ 6. Interactions Module
+
 **Path:** `api/src/interactions/`
 
 ✅ **Endpoints:**
+
 - `POST /interactions/articles/:id/like` - Like article
 - `DELETE /interactions/articles/:id/like` - Unlike article
 - `POST /interactions/articles/:id/bookmark` - Bookmark article
@@ -116,9 +132,11 @@
 ---
 
 ### 🔧 7. Supabase Module
+
 **Path:** `api/src/supabase/`
 
 ✅ **Features:**
+
 - Global Supabase client
 - Service role authentication
 - User-specific authenticated clients
@@ -146,6 +164,7 @@ npm install -D @types/passport-jwt @types/bcrypt
 ### 3. Configure Environment Variables
 
 1. Copy το `.env.example` σε `.env`:
+
    ```bash
    cp api/.env.example api/.env
    ```
@@ -157,12 +176,14 @@ npm install -D @types/passport-jwt @types/bcrypt
    - Copy το **service_role key** → `SUPABASE_SERVICE_ROLE_KEY` ⚠️
 
 3. Generate JWT secret:
+
    ```bash
    # Generate με OpenSSL
    openssl rand -base64 32
 
    # Ή online: https://generate-secret.vercel.app/32
    ```
+
    Βάλτο στο `JWT_SECRET`
 
 ### 4. Enable Supabase Auth
@@ -199,6 +220,7 @@ Content-Type: application/json
 ```
 
 **Response:**
+
 ```json
 {
   "user": {
@@ -338,13 +360,16 @@ api/
 ## 🎯 Next Steps
 
 ### 1. Comments Module (Optional)
+
 Δεν το συμπεριέλαβα στο initial implementation αλλά έχεις το database schema.
 Μπορείς να φτιάξεις:
+
 - `api/src/comments/comments.module.ts`
 - `api/src/comments/comments.controller.ts`
 - `api/src/comments/comments.service.ts`
 
 Endpoints:
+
 - `GET /articles/:id/comments` - Get comments
 - `POST /articles/:id/comments` - Create comment
 - `POST /comments/:id/reply` - Reply to comment
@@ -352,21 +377,26 @@ Endpoints:
 - `DELETE /comments/:id` - Delete comment
 
 ### 2. Notifications Module (Optional)
+
 Database schema υπάρχει, μπορείς να φτιάξεις:
+
 - `GET /notifications` - Get user notifications
 - `PATCH /notifications/:id/read` - Mark as read
 - `POST /notifications/read-all` - Mark all as read
 
 ### 3. Search & Filters
+
 - Implement full-text search με το `search_vector` column
 - Add filters για articles (by category, tags, date range)
 - Pagination improvements
 
 ### 4. File Upload
+
 - Implement image upload για article covers και avatars
 - Use Supabase Storage
 
 ### 5. Real-time Features (WebSockets)
+
 - Real-time notifications με Supabase Realtime
 - Live comment updates
 
@@ -375,29 +405,37 @@ Database schema υπάρχει, μπορείς να φτιάξεις:
 ## 🐛 Common Issues & Solutions
 
 ### Database Connection Error
+
 **Problem:** Cannot connect to Supabase
 **Solution:**
+
 - Check `SUPABASE_URL` και `SUPABASE_SERVICE_ROLE_KEY` στο `.env`
 - Verify project status στο Supabase Dashboard
 - Check internet connection
 
 ### JWT Token Invalid
+
 **Problem:** 401 Unauthorized
 **Solution:**
+
 - Check `JWT_SECRET` στο `.env`
 - Verify token format: `Bearer <token>`
 - Token might be expired (default 7 days)
 
 ### Migration Errors
+
 **Problem:** SQL migration fails
 **Solution:**
+
 - Copy-paste το SQL στο Supabase SQL Editor
 - Run section by section αν υπάρχουν errors
 - Check logs στο Supabase Dashboard
 
 ### CORS Issues
+
 **Problem:** Frontend cannot call API
 **Solution:**
+
 - Update `FRONTEND_URL` στο `.env`
 - Add CORS middleware στο `main.ts`:
   ```typescript
@@ -435,6 +473,7 @@ Database schema υπάρχει, μπορείς να φτιάξεις:
 **Το backend είναι έτοιμο για production!** 🚀
 
 Τα επόμενα βήματα είναι:
+
 1. Install dependencies
 2. Setup Supabase database (run migration)
 3. Configure `.env`

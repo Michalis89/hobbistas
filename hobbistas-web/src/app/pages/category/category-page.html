@@ -11,20 +11,19 @@
     <span class="loading loading-spinner loading-lg text-primary"></span>
   </div>
   } @else {
-    <!-- Articles Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      @for (article of articles(); track article.id) {
-      <lib-ui-article-card [article]="article" />
-      }
-    </div>
-
-    <!-- Empty State -->
-    @if (articles().length === 0) {
-    <div class="text-center py-16">
-      <p class="text-xl opacity-60">
-        Δεν υπάρχουν άρθρα σε αυτή την κατηγορία προς το παρόν.
-      </p>
-    </div>
+  <!-- Articles Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    @for (article of articles(); track article.id) {
+    <lib-ui-article-card [article]="article" />
     }
-  }
+  </div>
+
+  <!-- Empty State -->
+  @if (articles().length === 0) {
+  <div class="text-center py-16">
+    <p class="text-xl opacity-60">
+      Δεν υπάρχουν άρθρα σε αυτή την κατηγορία προς το παρόν.
+    </p>
+  </div>
+  } }
 </div>

@@ -1,4 +1,11 @@
-import { Component, computed, inject, OnInit, signal, effect } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  OnInit,
+  signal,
+  effect,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { Article } from '@hobbistas/models';
@@ -47,6 +54,7 @@ export class CategoryPageComponent implements OnInit {
 
   ngOnInit(): void {
     // Το effect θα φορτώσει τα articles αυτόματα
+    this.loadArticles(this.category());
   }
 
   /**
@@ -62,7 +70,10 @@ export class CategoryPageComponent implements OnInit {
         this.loading.set(false);
       },
       error: (err) => {
-        console.error(`❌ Error loading articles for category "${category}":`, err);
+        console.error(
+          `❌ Error loading articles for category "${category}":`,
+          err,
+        );
         // Το API Service θα επιστρέψει fallback values automatically
         this.loading.set(false);
       },

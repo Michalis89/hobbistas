@@ -14,7 +14,7 @@ interface Stat {
   selector: 'app-home',
   imports: [RouterLink, CommonModule],
   templateUrl: './home.html',
-  styleUrl: './home.css',
+  styleUrl: './home.scss',
 })
 export class HomeComponent implements OnInit {
   // Inject API Service

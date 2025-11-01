@@ -9,7 +9,7 @@ import { map } from 'rxjs/operators';
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './placeholder.html',
-  styleUrl: './placeholder.css',
+  styleUrl: './placeholder.scss',
 })
 export class PlaceholderComponent {
   private readonly route = inject(ActivatedRoute);

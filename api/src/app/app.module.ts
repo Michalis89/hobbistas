@@ -40,7 +40,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
     // Core Modules
     SupabaseModule, // Database
-    AuthModule,     // Authentication
+    AuthModule, // Authentication
 
     // Feature Modules
     UsersModule,

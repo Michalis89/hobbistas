@@ -1,11 +1,11 @@
-<div class="min-h-screen bg-base-200 flex items-center justify-center py-12 px-4">
+<div
+  class="min-h-screen bg-base-200 flex items-center justify-center py-12 px-4"
+>
   <div class="max-w-md w-full">
     <!-- Logo / Branding -->
     <div class="text-center mb-8">
       <h1 class="text-4xl font-bold text-primary mb-2">Χομπίστας</h1>
-      <p class="text-base-content/70">
-        Η πλατφόρμα για όλα τα χόμπι σου
-      </p>
+      <p class="text-base-content/70">Η πλατφόρμα για όλα τα χόμπι σου</p>
     </div>
 
     <!-- Auth Card -->
@@ -13,266 +13,283 @@
       <div class="card-body">
         <!-- Tabs -->
         <div class="tabs tabs-boxed mb-6">
-          <a
+          <button
             class="tab flex-1"
             [class.tab-active]="activeTab() === 'login'"
             (click)="setTab('login')"
+            (keydown.enter)="setTab('login')"
+            (keydown.space)="setTab('login')"
           >
             Σύνδεση
-          </a>
-          <a
+          </button>
+          <button
             class="tab flex-1"
             [class.tab-active]="activeTab() === 'signup'"
             (click)="setTab('signup')"
+            (keydown.enter)="setTab('signup')"
+            (keydown.space)="setTab('signup')"
           >
             Εγγραφή
-          </a>
+          </button>
         </div>
 
         <!-- Error Alert -->
         @if (errorMessage()) {
-        <div class="alert alert-error mb-4">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="stroke-current shrink-0 h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
-            />
-          </svg>
-          <span>{{ errorMessage() }}</span>
-        </div>
+          <div class="alert alert-error mb-4">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              class="stroke-current shrink-0 h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <span>{{ errorMessage() }}</span>
+          </div>
         }
 
         <!-- Login Form -->
         @if (activeTab() === 'login') {
-        <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
-          <!-- Email -->
-          <div class="form-control">
-            <label class="label">
-              <span class="label-text">Email</span>
-            </label>
-            <input
-              type="email"
-              formControlName="email"
-              placeholder="example@email.com"
-              class="input input-bordered"
-              [class.input-error]="
-                loginForm.get('email')?.touched &&
-                loginForm.get('email')?.invalid
-              "
-            />
-            @if (getErrorMessage(loginForm, 'email')) {
-            <label class="label">
-              <span class="label-text-alt text-error">
-                {{ getErrorMessage(loginForm, 'email') }}
-              </span>
-            </label>
-            }
-          </div>
+          <form [formGroup]="loginForm" (ngSubmit)="onLogin()">
+            <!-- Email -->
+            <div class="form-control">
+              <label class="label" for="email">
+                <span class="label-text">Email</span>
+              </label>
+              <input
+                id="email"
+                type="email"
+                formControlName="email"
+                placeholder="example@email.com"
+                class="input input-bordered"
+                [class.input-error]="
+                  loginForm.get('email')?.touched &&
+                  loginForm.get('email')?.invalid
+                "
+              />
+              @if (getErrorMessage(loginForm, 'email')) {
+                <label class="label" for="email">
+                  <span class="label-text-alt text-error">
+                    {{ getErrorMessage(loginForm, 'email') }}
+                  </span>
+                </label>
+              }
+            </div>
 
-          <!-- Password -->
-          <div class="form-control mt-4">
-            <label class="label">
-              <span class="label-text">Κωδικός</span>
-            </label>
-            <input
-              type="password"
-              formControlName="password"
-              placeholder="••••••••"
-              class="input input-bordered"
-              [class.input-error]="
-                loginForm.get('password')?.touched &&
-                loginForm.get('password')?.invalid
-              "
-            />
-            @if (getErrorMessage(loginForm, 'password')) {
-            <label class="label">
-              <span class="label-text-alt text-error">
-                {{ getErrorMessage(loginForm, 'password') }}
-              </span>
-            </label>
-            }
-          </div>
+            <!-- Password -->
+            <div class="form-control mt-4">
+              <label class="label" for="password">
+                <span class="label-text">Κωδικός</span>
+              </label>
+              <input
+                id="password"
+                type="password"
+                formControlName="password"
+                placeholder="••••••••"
+                class="input input-bordered"
+                [class.input-error]="
+                  loginForm.get('password')?.touched &&
+                  loginForm.get('password')?.invalid
+                "
+              />
+              @if (getErrorMessage(loginForm, 'password')) {
+                <label class="label" for="password">
+                  <span class="label-text-alt text-error">
+                    {{ getErrorMessage(loginForm, 'password') }}
+                  </span>
+                </label>
+              }
+            </div>
 
-          <!-- Remember me & Forgot password -->
-          <div class="flex justify-between items-center mt-4">
-            <label class="label cursor-pointer">
-              <input type="checkbox" class="checkbox checkbox-sm mr-2" />
-              <span class="label-text">Να με θυμάσαι</span>
-            </label>
-            <a href="#" class="link link-primary text-sm">Ξέχασα τον κωδικό</a>
-          </div>
+            <!-- Remember me & Forgot password -->
+            <div class="flex justify-between items-center mt-4">
+              <label class="label cursor-pointer">
+                <input type="checkbox" class="checkbox checkbox-sm mr-2" />
+                <span class="label-text">Να με θυμάσαι</span>
+              </label>
+              <a href="#" class="link link-primary text-sm"
+                >Ξέχασα τον κωδικό</a
+              >
+            </div>
 
-          <!-- Submit Button -->
-          <div class="form-control mt-6">
-            <button
-              type="submit"
-              class="btn btn-primary"
-              [class.loading]="loading()"
-              [disabled]="loading()"
-            >
-              @if (loading()) {
-              <span class="loading loading-spinner"></span>
-              } @else { Σύνδεση }
-            </button>
-          </div>
-        </form>
+            <!-- Submit Button -->
+            <div class="form-control mt-6">
+              <button
+                type="submit"
+                class="btn btn-primary"
+                [class.loading]="loading()"
+                [disabled]="loading()"
+              >
+                @if (loading()) {
+                  <span class="loading loading-spinner"></span>
+                } @else {
+                  Σύνδεση
+                }
+              </button>
+            </div>
+          </form>
         }
 
         <!-- Signup Form -->
         @if (activeTab() === 'signup') {
-        <form [formGroup]="signupForm" (ngSubmit)="onSignup()">
-          <!-- Email -->
-          <div class="form-control">
-            <label class="label">
-              <span class="label-text">Email</span>
-            </label>
-            <input
-              type="email"
-              formControlName="email"
-              placeholder="example@email.com"
-              class="input input-bordered"
-              [class.input-error]="
-                signupForm.get('email')?.touched &&
-                signupForm.get('email')?.invalid
-              "
-            />
-            @if (getErrorMessage(signupForm, 'email')) {
-            <label class="label">
-              <span class="label-text-alt text-error">
-                {{ getErrorMessage(signupForm, 'email') }}
-              </span>
-            </label>
-            }
-          </div>
+          <form [formGroup]="signupForm" (ngSubmit)="onSignup()">
+            <!-- Email -->
+            <div class="form-control">
+              <label class="label" for="signupEmail">
+                <span class="label-text">Email</span>
+              </label>
+              <input
+                id="signupEmail"
+                type="email"
+                formControlName="email"
+                placeholder="example@email.com"
+                class="input input-bordered"
+                [class.input-error]="
+                  signupForm.get('email')?.touched &&
+                  signupForm.get('email')?.invalid
+                "
+              />
+              @if (getErrorMessage(signupForm, 'email')) {
+                <label class="label" for="signupEmail">
+                  <span class="label-text-alt text-error">
+                    {{ getErrorMessage(signupForm, 'email') }}
+                  </span>
+                </label>
+              }
+            </div>
 
-          <!-- Username -->
-          <div class="form-control mt-4">
-            <label class="label">
-              <span class="label-text">Username</span>
-            </label>
-            <input
-              type="text"
-              formControlName="username"
-              placeholder="username"
-              class="input input-bordered"
-              [class.input-error]="
-                signupForm.get('username')?.touched &&
-                signupForm.get('username')?.invalid
-              "
-            />
-            @if (getErrorMessage(signupForm, 'username')) {
-            <label class="label">
-              <span class="label-text-alt text-error">
-                {{ getErrorMessage(signupForm, 'username') }}
-              </span>
-            </label>
-            }
-          </div>
+            <!-- Username -->
+            <div class="form-control mt-4">
+              <label class="label" for="signupUsername">
+                <span class="label-text">Username</span>
+              </label>
+              <input
+                id="signupUsername"
+                type="text"
+                formControlName="username"
+                placeholder="username"
+                class="input input-bordered"
+                [class.input-error]="
+                  signupForm.get('username')?.touched &&
+                  signupForm.get('username')?.invalid
+                "
+              />
+              @if (getErrorMessage(signupForm, 'username')) {
+                <label class="label" for="signupUsername">
+                  <span class="label-text-alt text-error">
+                    {{ getErrorMessage(signupForm, 'username') }}
+                  </span>
+                </label>
+              }
+            </div>
 
-          <!-- Display Name -->
-          <div class="form-control mt-4">
-            <label class="label">
-              <span class="label-text">Όνομα Εμφάνισης</span>
-            </label>
-            <input
-              type="text"
-              formControlName="displayName"
-              placeholder="Το όνομά σου"
-              class="input input-bordered"
-              [class.input-error]="
-                signupForm.get('displayName')?.touched &&
-                signupForm.get('displayName')?.invalid
-              "
-            />
-            @if (getErrorMessage(signupForm, 'displayName')) {
-            <label class="label">
-              <span class="label-text-alt text-error">
-                {{ getErrorMessage(signupForm, 'displayName') }}
-              </span>
-            </label>
-            }
-          </div>
+            <!-- Display Name -->
+            <div class="form-control mt-4">
+              <label class="label" for="signupDisplayName">
+                <span class="label-text">Όνομα Εμφάνισης</span>
+              </label>
+              <input
+                id="signupDisplayName"
+                type="text"
+                formControlName="displayName"
+                placeholder="Το όνομά σου"
+                class="input input-bordered"
+                [class.input-error]="
+                  signupForm.get('displayName')?.touched &&
+                  signupForm.get('displayName')?.invalid
+                "
+              />
+              @if (getErrorMessage(signupForm, 'displayName')) {
+                <label class="label" for="signupDisplayName">
+                  <span class="label-text-alt text-error">
+                    {{ getErrorMessage(signupForm, 'displayName') }}
+                  </span>
+                </label>
+              }
+            </div>
 
-          <!-- Password -->
-          <div class="form-control mt-4">
-            <label class="label">
-              <span class="label-text">Κωδικός</span>
-            </label>
-            <input
-              type="password"
-              formControlName="password"
-              placeholder="••••••••"
-              class="input input-bordered"
-              [class.input-error]="
-                signupForm.get('password')?.touched &&
-                signupForm.get('password')?.invalid
-              "
-            />
-            @if (getErrorMessage(signupForm, 'password')) {
-            <label class="label">
-              <span class="label-text-alt text-error">
-                {{ getErrorMessage(signupForm, 'password') }}
-              </span>
-            </label>
-            }
-          </div>
+            <!-- Password -->
+            <div class="form-control mt-4">
+              <label class="label" for="signupPassword">
+                <span class="label-text">Κωδικός</span>
+              </label>
+              <input
+                type="signupPassword"
+                type="password"
+                formControlName="password"
+                placeholder="••••••••"
+                class="input input-bordered"
+                [class.input-error]="
+                  signupForm.get('password')?.touched &&
+                  signupForm.get('password')?.invalid
+                "
+              />
+              @if (getErrorMessage(signupForm, 'password')) {
+                <label class="label" for="signupPassword">
+                  <span class="label-text-alt text-error">
+                    {{ getErrorMessage(signupForm, 'password') }}
+                  </span>
+                </label>
+              }
+            </div>
 
-          <!-- Confirm Password -->
-          <div class="form-control mt-4">
-            <label class="label">
-              <span class="label-text">Επιβεβαίωση Κωδικού</span>
-            </label>
-            <input
-              type="password"
-              formControlName="confirmPassword"
-              placeholder="••••••••"
-              class="input input-bordered"
-              [class.input-error]="
-                signupForm.get('confirmPassword')?.touched &&
-                signupForm.get('confirmPassword')?.invalid
-              "
-            />
-            @if (getErrorMessage(signupForm, 'confirmPassword')) {
-            <label class="label">
-              <span class="label-text-alt text-error">
-                {{ getErrorMessage(signupForm, 'confirmPassword') }}
-              </span>
-            </label>
-            }
-          </div>
+            <!-- Confirm Password -->
+            <div class="form-control mt-4">
+              <label class="label" for="confirmPassword">
+                <span class="label-text">Επιβεβαίωση Κωδικού</span>
+              </label>
+              <input
+                id="confirmPassword"
+                type="password"
+                formControlName="confirmPassword"
+                placeholder="••••••••"
+                class="input input-bordered"
+                [class.input-error]="
+                  signupForm.get('confirmPassword')?.touched &&
+                  signupForm.get('confirmPassword')?.invalid
+                "
+              />
+              @if (getErrorMessage(signupForm, 'confirmPassword')) {
+                <label class="label" for="confirmPassword">
+                  <span class="label-text-alt text-error">
+                    {{ getErrorMessage(signupForm, 'confirmPassword') }}
+                  </span>
+                </label>
+              }
+            </div>
 
-          <!-- Terms -->
-          <div class="form-control mt-4">
-            <label class="label cursor-pointer justify-start">
-              <input type="checkbox" class="checkbox checkbox-sm mr-2" />
-              <span class="label-text text-sm">
-                Αποδέχομαι τους
-                <a href="#" class="link link-primary">όρους χρήσης</a>
-              </span>
-            </label>
-          </div>
+            <!-- Terms -->
+            <div class="form-control mt-4">
+              <label class="label cursor-pointer justify-start">
+                <input type="checkbox" class="checkbox checkbox-sm mr-2" />
+                <span class="label-text text-sm">
+                  Αποδέχομαι τους
+                  <a href="#" class="link link-primary">όρους χρήσης</a>
+                </span>
+              </label>
+            </div>
 
-          <!-- Submit Button -->
-          <div class="form-control mt-6">
-            <button
-              type="submit"
-              class="btn btn-primary"
-              [class.loading]="loading()"
-              [disabled]="loading()"
-            >
-              @if (loading()) {
-              <span class="loading loading-spinner"></span>
-              } @else { Εγγραφή }
-            </button>
-          </div>
-        </form>
+            <!-- Submit Button -->
+            <div class="form-control mt-6">
+              <button
+                type="submit"
+                class="btn btn-primary"
+                [class.loading]="loading()"
+                [disabled]="loading()"
+              >
+                @if (loading()) {
+                  <span class="loading loading-spinner"></span>
+                } @else {
+                  Εγγραφή
+                }
+              </button>
+            </div>
+          </form>
         }
 
         <!-- Divider -->
@@ -280,33 +297,33 @@
 
         <!-- Dev Auto-Login (Development Only) -->
         @if (isDev() && activeTab() === 'login') {
-        <div class="mb-4">
-          <button
-            type="button"
-            (click)="devLogin()"
-            class="btn btn-warning btn-outline w-full gap-2"
-            [disabled]="loading()"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
+          <div class="mb-4">
+            <button
+              type="button"
+              (click)="devLogin()"
+              class="btn btn-warning btn-outline w-full gap-2"
+              [disabled]="loading()"
             >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
-              />
-            </svg>
-            [DEV] Auto-Login με Test User
-          </button>
-          <p class="text-xs text-warning text-center mt-1">
-            Μόνο για Development (test@hobbistas.com)
-          </p>
-        </div>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"
+                />
+              </svg>
+              [DEV] Auto-Login με Test User
+            </button>
+            <p class="text-xs text-warning text-center mt-1">
+              Μόνο για Development (test&#64;hobbistas.com)
+            </p>
+          </div>
         }
 
         <!-- Social Login -->

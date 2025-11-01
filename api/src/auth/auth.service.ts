@@ -278,7 +278,9 @@ export class AuthService {
       }
 
       // Update profile in database
-      this.logger.log(`Updating database with data: ${JSON.stringify(updateData, null, 2)}`);
+      this.logger.log(
+        `Updating database with data: ${JSON.stringify(updateData, null, 2)}`,
+      );
       const { data: updatedProfile, error } = await this.supabaseService
         .getClient()
         .from('profiles')
@@ -299,7 +301,10 @@ export class AuthService {
       this.logger.log(`✅ Profile updated successfully for user ${userId}`);
       return this.sanitizeUser(updatedProfile);
     } catch (error) {
-      this.logger.error(`Error updating profile: ${error.message}`, error.stack);
+      this.logger.error(
+        `Error updating profile: ${error.message}`,
+        error.stack,
+      );
       throw error;
     }
   }
